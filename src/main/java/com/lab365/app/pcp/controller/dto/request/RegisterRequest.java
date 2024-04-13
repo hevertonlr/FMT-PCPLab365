@@ -3,7 +3,6 @@ package com.lab365.app.pcp.controller.dto.request;
 import com.lab365.app.pcp.datasource.entity.User;
 import com.lab365.app.pcp.infra.validation.ValidPassword;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public record RegisterRequest(
         @NotNull String username,

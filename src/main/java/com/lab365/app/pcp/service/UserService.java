@@ -2,6 +2,7 @@ package com.lab365.app.pcp.service;
 
 import com.lab365.app.pcp.datasource.entity.User;
 import com.lab365.app.pcp.datasource.repository.UserRepository;
+import com.lab365.app.pcp.infra.exception.ConflictException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +16,15 @@ public class UserService extends GenericService<User> {
     }
 
     @Override
-    public User save(User entity) throws RuntimeException {
-         ((UserRepository) super.repository).findByUsername(entity.getUsername())
-                .ifPresentOrElse((user) -> {
-                    throw new RuntimeException("Usuário já existe");
-                }, () -> {
-                    entity.setPassword(bCryptPasswordEncoder.encode(entity.getPassword()));
-                    super.save(entity);
-                });
+    public User save(User entity) throws ConflictException {
+         ((UserRepository) super.repository)
+            .findByUsername(entity.getUsername())
+            .ifPresentOrElse((user) -> {
+                throw new ConflictException("Usuário já existe");
+            }, () -> {
+                entity.setPassword(bCryptPasswordEncoder.encode(entity.getPassword()));
+                super.save(entity);
+            });
         return entity;
     }
 }

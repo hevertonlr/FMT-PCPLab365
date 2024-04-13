@@ -23,4 +23,13 @@ public class RestExceptionHandler {
     public ResponseEntity<?> handler(MethodArgumentNotValidException ex) {
         return Error.processFieldErrors(ex.getBindingResult().getFieldErrors());
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<?> handler(NotFoundException ex){
+        return Error.getError(HttpStatus.NOT_FOUND, ex);
+    }
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<?> handler(ConflictException ex){
+        return Error.getError(HttpStatus.CONFLICT, ex);
+    }
 }
