@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class RestExceptionHandler {
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handler(Exception ex){
+    public ResponseEntity<?> handler(Exception ex) {
         return Error.getError(HttpStatus.INTERNAL_SERVER_ERROR, ex);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<?> handler(DataIntegrityViolationException ex){
+    public ResponseEntity<?> handler(DataIntegrityViolationException ex) {
         return Error.getError(HttpStatus.BAD_REQUEST, ex);
     }
 
@@ -25,11 +25,17 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<?> handler(NotFoundException ex){
+    public ResponseEntity<?> handler(NotFoundException ex) {
         return Error.getError(HttpStatus.NOT_FOUND, ex);
     }
+
+    @ExceptionHandler(InvalidException.class)
+    public ResponseEntity<?> handler(InvalidException ex) {
+        return Error.getError(HttpStatus.BAD_REQUEST, ex);
+    }
+
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<?> handler(ConflictException ex){
+    public ResponseEntity<?> handler(ConflictException ex) {
         return Error.getError(HttpStatus.CONFLICT, ex);
     }
 }
