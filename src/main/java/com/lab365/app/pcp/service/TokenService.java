@@ -7,6 +7,7 @@ import com.lab365.app.pcp.datasource.repository.UserRepository;
 import com.lab365.app.pcp.infra.exception.InvalidException;
 import com.lab365.app.pcp.infra.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -22,6 +23,8 @@ public class TokenService {
     private final JwtEncoder jwtEncoder;
     private final UserRepository userRepository;
 
+    @Value("${spring.application.name}")
+    private String appName;
     private static final long EXPIRATION_TIME = 36000L;
 
     public LoginResponse getToken(LoginRequest request) {
@@ -41,7 +44,7 @@ public class TokenService {
     private String generateToken(String subject) {
         Instant now = Instant.now();
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
-                .issuer("spring.application.name")
+                .issuer(appName)
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(EXPIRATION_TIME))
                 .subject(subject)

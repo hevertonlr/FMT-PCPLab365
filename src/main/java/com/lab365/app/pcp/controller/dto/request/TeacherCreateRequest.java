@@ -21,7 +21,7 @@ public record TeacherCreateRequest(
         @JsonSerialize(using = LocalDateSerializer.class)
         @JsonDeserialize(using = LocalDateDeserializer.class)
         LocalDate entryDate,
-        @NotNull @ValueOfEnum(enumClass = RolesEnum.class) String profile,
+        @NotNull @ValueOfEnum(enumClass = RolesEnum.class, excludedValues = {"ALUNO", "ADM"}) String profile,
         @NotNull String login,
         @ValidPassword String password
 ) {

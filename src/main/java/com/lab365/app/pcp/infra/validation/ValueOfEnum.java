@@ -17,6 +17,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ValueOfEnum {
     Class<? extends Enum<?>> enumClass();
 
+    String[] excludedValues() default {};
+
     String message() default "Valor de Enum inválido";
 
     Class<?>[] groups() default {};
