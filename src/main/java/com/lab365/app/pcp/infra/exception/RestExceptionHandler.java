@@ -29,6 +29,11 @@ public class RestExceptionHandler {
         return Error.getError(HttpStatus.NOT_FOUND, ex);
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<?> handler(UnauthorizedException ex) {
+        return Error.getError(HttpStatus.UNAUTHORIZED, ex);
+    }
+
     @ExceptionHandler(InvalidException.class)
     public ResponseEntity<?> handler(InvalidException ex) {
         return Error.getError(HttpStatus.BAD_REQUEST, ex);

@@ -9,16 +9,21 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "usuario")
 @EqualsAndHashCode(callSuper = true)
-public class User extends GenericEntity<User>{
+public class User extends GenericEntity<User> {
 
-    @Column(name = "nome_usuario",nullable = false,unique = true)
+    @Column(name = "nome_usuario", nullable = false, unique = true)
     private String username;
 
     @JsonIgnore
-    @Column(name = "senha",nullable = false)
+    @Column(name = "senha", nullable = false)
     private String password;
 
     @ManyToOne
-    @JoinColumn(name="id_papel")
+    @JoinColumn(name = "id_papel")
     private Role role;
+
+    @Override
+    public void update(User source) {
+        this.password = !source.getPassword().isBlank() ? source.getPassword() : this.password;
+    }
 }
