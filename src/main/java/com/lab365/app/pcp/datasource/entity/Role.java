@@ -23,6 +23,6 @@ public class Role extends GenericEntity<Role> implements GrantedAuthority {
 
     @Override
     public void update(Role source) {
-        this.name = !source.getName().isBlank() ? source.getName() : this.name;
+        if (!source.getName().isBlank()) setName(source.getName());
     }
 }

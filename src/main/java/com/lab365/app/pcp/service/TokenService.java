@@ -33,7 +33,7 @@ public class TokenService {
 
         validatePassword(user, request.password());
 
-        return new LoginResponse(generateToken(user.getUsername()), EXPIRATION_TIME);
+        return new LoginResponse(generateToken(user), EXPIRATION_TIME);
     }
 
     private void validatePassword(User user, String password) {
@@ -41,13 +41,14 @@ public class TokenService {
             throw new UnauthorizedException("Senha Incorreta!");
     }
 
-    private String generateToken(String subject) {
+    private String generateToken(User user) {
         Instant now = Instant.now();
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .issuer(appName)
                 .issuedAt(now)
+                .claim("role", user.getRole().getName())
                 .expiresAt(now.plusSeconds(EXPIRATION_TIME))
-                .subject(subject)
+                .subject(user.getUsername())
                 .build();
         return jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
     }

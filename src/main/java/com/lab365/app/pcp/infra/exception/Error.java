@@ -1,5 +1,7 @@
 package com.lab365.app.pcp.infra.exception;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -12,6 +14,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
+@JsonInclude(Include.NON_NULL)
 @RequiredArgsConstructor
 public class Error {
     private final HttpStatus status;
@@ -19,7 +22,7 @@ public class Error {
     @Setter
     private List<ErrorList> errors;
 
-    private void setFieldErrors(List<FieldError> fieldErrors){
+    private void setFieldErrors(List<FieldError> fieldErrors) {
         this.errors = fieldErrors.stream().map(e -> new ErrorList(
                 e.getField(),
                 Objects.requireNonNull(e.getDefaultMessage()).split("-")

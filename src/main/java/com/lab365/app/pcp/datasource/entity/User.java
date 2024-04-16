@@ -19,11 +19,12 @@ public class User extends GenericEntity<User> {
     private String password;
 
     @ManyToOne
-    @JoinColumn(name = "id_papel")
+    @JoinColumn(name = "id_papel", nullable = false)
     private Role role;
 
     @Override
     public void update(User source) {
-        this.password = !source.getPassword().isBlank() ? source.getPassword() : this.password;
+        if (!source.getPassword().isBlank()) setPassword(source.getPassword());
+        if (source.getRole() != null) setRole(source.getRole());
     }
 }

@@ -9,8 +9,8 @@ import com.lab365.app.pcp.datasource.entity.Role;
 import com.lab365.app.pcp.datasource.entity.Teacher;
 import com.lab365.app.pcp.datasource.entity.User;
 import com.lab365.app.pcp.datasource.enums.RolesEnum;
-import com.lab365.app.pcp.infra.validation.ValidPassword;
-import com.lab365.app.pcp.infra.validation.ValueOfEnum;
+import com.lab365.app.pcp.infra.validation.annotation.ValidPassword;
+import com.lab365.app.pcp.infra.validation.annotation.ValueOfEnum;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;

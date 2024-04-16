@@ -29,12 +29,12 @@ public class Teacher extends GenericEntity<Teacher> {
     private LocalDate entryDate;
 
     @OneToOne
-    @JoinColumn(name = "id_usuario", nullable = false)
+    @JoinColumn(name = "id_usuario", nullable = false, unique = true)
     private User user;
 
     @Override
     public void update(Teacher source) {
-        this.name = !source.getName().isBlank() ? source.getName() : this.name;
-        this.entryDate = source.getEntryDate() != null ? source.getEntryDate() : this.getEntryDate();
+        if (!source.getName().isBlank()) setName(source.getName());
+        if (source.getEntryDate() != null) setEntryDate(source.getEntryDate());
     }
 }

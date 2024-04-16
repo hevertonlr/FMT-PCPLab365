@@ -1,5 +1,6 @@
-package com.lab365.app.pcp.infra.validation;
+package com.lab365.app.pcp.infra.validation.annotation;
 
+import com.lab365.app.pcp.infra.validation.PasswordConstraintValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -12,17 +13,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented
 @Retention(RUNTIME)
-@Constraint(validatedBy = ValueOfEnumValidator.class)
-@Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
-public @interface ValueOfEnum {
-    Class<? extends Enum<?>> enumClass();
-
-    String[] excludedValues() default {};
-
-    String message() default "Valor de Enum inválido";
+@Target({TYPE, FIELD, ANNOTATION_TYPE})
+@Constraint(validatedBy = PasswordConstraintValidator.class)
+public @interface ValidPassword {
+    String message() default "Password Inválido";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

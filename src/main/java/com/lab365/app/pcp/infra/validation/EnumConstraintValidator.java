@@ -1,5 +1,6 @@
 package com.lab365.app.pcp.infra.validation;
 
+import com.lab365.app.pcp.infra.validation.annotation.ValueOfEnum;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ValueOfEnumValidator implements ConstraintValidator<ValueOfEnum, CharSequence> {
+public class EnumConstraintValidator implements ConstraintValidator<ValueOfEnum, CharSequence> {
     private List<String> acceptedValues;
     private List<String> excludedValues;
 
