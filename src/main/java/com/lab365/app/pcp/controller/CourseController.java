@@ -39,11 +39,11 @@ public class CourseController {
 
     @GetMapping("{id}")
     public ResponseEntity<CourseResponse> findById(@PathVariable Long id) {
-        log.info("GET /cursos -> Início");
+        log.info("GET /cursos/{} -> Início", id);
         Course entity = service.findById(id);
-        log.info("GET /cursos -> Encontrado");
+        log.info("GET /cursos/{} -> Encontrado", id);
         CourseResponse response = CourseResponse.fromEntity(entity);
-        log.debug("GET /cursos -> Response Body:\n{}\n", toJSON(response));
+        log.debug("GET /cursos/{} -> Response Body:\n{}\n", id, toJSON(response));
         return ResponseEntity.ok(response);
     }
 

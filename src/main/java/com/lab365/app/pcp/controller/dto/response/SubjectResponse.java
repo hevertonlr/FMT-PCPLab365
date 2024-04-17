@@ -5,9 +5,9 @@ import com.lab365.app.pcp.datasource.entity.Subject;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record SubjectResponse(Long id, String name) {
+public record SubjectResponse(Long id, String name, String courseName) {
     public static SubjectResponse fromEntity(Subject entity) {
-        return new SubjectResponse(entity.getId(), entity.getName());
+        return new SubjectResponse(entity.getId(), entity.getName(), entity.getCourse().getName());
     }
 
     public static List<SubjectResponse> fromEntity(List<Subject> entities) {
