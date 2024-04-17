@@ -33,13 +33,14 @@ public class UserService extends GenericService<User> {
                     log.warn("Salvando: Usuário já existe ({})", user.getUsername());
                     throw new InvalidException("Usuário já existe");
                 }, () -> {
-                    roleRepository.findByName(entity.getRole().getName().toUpperCase()).ifPresentOrElse(role -> {
+                    String rolename = entity.getRole().getName().toUpperCase();
+                    roleRepository.findByName(rolename).ifPresentOrElse(role -> {
                         entity.setRole(role);
                         entity.setPassword(bCryptPasswordEncoder.encode(entity.getPassword()));
                         super.save(entity);
                         log.debug("Salvando: Registro criado -> \n{}\n", toJSON(entity));
                     }, () -> {
-                        log.error("Salvando: ERRO -> Papel 'ADM' NÃO ENCONTRADO!");
+                        log.error("Salvando: ERRO -> Papel '{}' NÃO ENCONTRADO!", rolename);
                         throw new InvalidException("Erro ao cadastrar o usuário.");
                     });
                 });

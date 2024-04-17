@@ -31,8 +31,9 @@ public class Teacher extends GenericEntity<Teacher> {
     private User user;
 
     @Override
-    public void update(Teacher source) {
+    public Teacher update(Teacher source) {
         if (!source.getName().isBlank()) setName(source.getName());
         if (source.getEntryDate() != null) setEntryDate(source.getEntryDate());
+        return source;
     }
 }

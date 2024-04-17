@@ -1,6 +1,7 @@
 package com.lab365.app.pcp.datasource.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -24,17 +25,20 @@ public class Student extends GenericEntity<Student> {
     private LocalDate birthday;
 
     @OneToOne
+    @JsonIgnoreProperties("students")
     @JoinColumn(name = "id_usuario", nullable = false, unique = true)
     private User user;
 
     @ManyToOne
+    @JsonIgnoreProperties("students")
     @JoinColumn(name = "id_turma", nullable = false)
     private Classroom classroom;
 
     @Override
-    public void update(Student source) {
+    public Student update(Student source) {
         if (!source.getName().isBlank()) setName(source.getName());
         if (source.getBirthday() != null) setBirthday(source.getBirthday());
         if (source.getClassroom() != null) setClassroom(source.getClassroom());
+        return source;
     }
 }

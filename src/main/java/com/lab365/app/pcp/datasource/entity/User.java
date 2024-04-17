@@ -21,8 +21,9 @@ public class User extends GenericEntity<User> {
     private Role role;
 
     @Override
-    public void update(User source) {
+    public User update(User source) {
         if (!source.getPassword().isBlank()) setPassword(source.getPassword());
         if (source.getRole() != null) setRole(source.getRole());
+        return source;
     }
 }

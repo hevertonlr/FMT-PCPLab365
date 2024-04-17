@@ -9,7 +9,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.lab365.app.pcp.infra.utils.Util.toJSON;
 
@@ -47,22 +46,21 @@ public abstract class GenericService<T extends GenericEntity<T>> implements IGen
     @Override
     public T save(T entity) {
         try {
-            String action = entity.getId() == null ? "criado" : "alterado";
-            Optional<T> existent = repository.findById(entity.getId());
-            if (existent.isPresent()) {
-                existent.get().update(entity);
-                entity = existent.get();
-            }
-            T finalEntity = repository.save(entity);
+            boolean isCreation = entity.getId() == null;
 
+            T finalEntity = repository.save(isCreation ? entity : repository
+                    .findById(entity.getId())
+                    .map(existent -> existent.update(entity))
+                    .orElse(entity));
+
+            String action = isCreation ? "criado" : "alterado";
             log.info("Salvando: Registro {} com sucesso.", action);
-            log.info("Salvando: Registro {} -> \n{}\n", action, toJSON(entity));
+            log.info("Salvando: Registro {} -> \n{}\n", action, toJSON(finalEntity));
             return finalEntity;
         } catch (DataAccessException e) {
             log.error("Salvando: ERRO -> {}", e.getMessage());
             throw new InvalidException(e.getMessage());
         }
-
     }
 
     @Override
