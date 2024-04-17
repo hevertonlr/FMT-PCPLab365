@@ -5,13 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 
 @Data
 @Entity
 @Table(name = "papel", indexes = @Index(columnList = "nome"))
-@EqualsAndHashCode(callSuper = true)
 public class Role extends GenericEntity<Role> implements GrantedAuthority {
     @Column(name = "nome", nullable = false)
     private String name;

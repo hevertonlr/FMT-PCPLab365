@@ -2,14 +2,12 @@ package com.lab365.app.pcp.datasource.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "turma")
-@EqualsAndHashCode(callSuper = true)
 public class Classroom extends GenericEntity<Classroom> {
     private String name;
 

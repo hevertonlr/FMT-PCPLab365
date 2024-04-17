@@ -3,12 +3,10 @@ package com.lab365.app.pcp.datasource.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
 @Table(name = "usuario")
-@EqualsAndHashCode(callSuper = true)
 public class User extends GenericEntity<User> {
 
     @Column(name = "nome_usuario", nullable = false, unique = true)

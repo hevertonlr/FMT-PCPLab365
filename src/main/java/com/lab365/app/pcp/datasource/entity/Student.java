@@ -7,14 +7,12 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 
 @Data
 @Entity
 @Table(name = "aluno")
-@EqualsAndHashCode(callSuper = true)
 public class Student extends GenericEntity<Student> {
     @Column(name = "nome", nullable = false)
     private String name;

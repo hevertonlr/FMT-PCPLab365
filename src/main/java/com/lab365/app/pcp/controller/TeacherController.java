@@ -7,6 +7,7 @@ import com.lab365.app.pcp.datasource.entity.Teacher;
 import com.lab365.app.pcp.service.TeacherService;
 import com.lab365.app.pcp.service.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,27 +21,21 @@ import static com.lab365.app.pcp.infra.utils.Util.toJSON;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "docentes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TeacherController {
     private final TeacherService service;
     private final UserService userService;
 
-    public TeacherController(TeacherService service, UserService userService) {
-//        super(service);
-        this.service = service;
-        this.userService = userService;
-    }
-
     @PostMapping
     public ResponseEntity<TeacherResponse> create(@Valid @RequestBody TeacherCreateRequest request) {
-        String requestedValue = "POST /docentes";
-        log.info("{}", requestedValue);
+        log.info("POST /docentes");
         Teacher entity = request.toEntity();
         userService.save(entity.getUser());
 
         entity = service.save(entity);
-        log.info("{} -> Cadastrado", requestedValue);
-        log.debug("{} -> Response Body:\n{}\n", requestedValue, toJSON(entity));
+        log.info("POST /docentes -> Cadastrado");
+        log.debug("POST /docentes -> Response Body:\n{}\n", toJSON(entity));
         return ResponseEntity.status(HttpStatus.CREATED).body(TeacherResponse.fromEntity(entity));
     }
 

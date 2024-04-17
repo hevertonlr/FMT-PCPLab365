@@ -11,18 +11,18 @@ import com.lab365.app.pcp.datasource.entity.User;
 import com.lab365.app.pcp.datasource.enums.RolesEnum;
 import com.lab365.app.pcp.infra.validation.annotation.ValidPassword;
 import com.lab365.app.pcp.infra.validation.annotation.ValueOfEnum;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 
 public record TeacherCreateRequest(
-        @NotNull String name,
+        @NotBlank String name,
         @JsonFormat(pattern = "dd/MM/yyyy")
         @JsonSerialize(using = LocalDateSerializer.class)
         @JsonDeserialize(using = LocalDateDeserializer.class)
         LocalDate entryDate,
-        @NotNull @ValueOfEnum(enumClass = RolesEnum.class, excludedValues = {"ALUNO", "ADM"}) String profile,
-        @NotNull String login,
+        @NotBlank @ValueOfEnum(enumClass = RolesEnum.class, excludedValues = {"ALUNO", "ADM"}) String profile,
+        @NotBlank String login,
         @ValidPassword String password
 ) {
     public Teacher toEntity() {

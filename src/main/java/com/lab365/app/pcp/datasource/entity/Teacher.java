@@ -7,7 +7,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 @Entity
 @DynamicUpdate
 @Table(name = "docente")
-@EqualsAndHashCode(callSuper = true)
 public class Teacher extends GenericEntity<Teacher> {
 
     @Column(name = "nome", nullable = false)

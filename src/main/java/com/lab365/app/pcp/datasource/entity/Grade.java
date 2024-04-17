@@ -7,7 +7,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Table(name = "notas")
-@EqualsAndHashCode(callSuper = true)
 public class Grade extends GenericEntity<Grade> {
     @ColumnDefault(value = "0.00")
     @Column(name = "valor", precision = 5, scale = 2, nullable = false)

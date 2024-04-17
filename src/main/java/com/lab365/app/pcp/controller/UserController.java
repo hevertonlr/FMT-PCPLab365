@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         log.info("POST /login -> username: {}", request.username());
         LoginResponse response = tokenService.getToken(request);
         log.debug("POST /login -> SIGNED \n{}\n", toJSON(response));
