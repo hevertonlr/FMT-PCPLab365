@@ -4,7 +4,7 @@ import com.lab365.app.pcp.controller.dto.request.TeacherCreateRequest;
 import com.lab365.app.pcp.controller.dto.request.TeacherUpdateRequest;
 import com.lab365.app.pcp.controller.dto.response.TeacherResponse;
 import com.lab365.app.pcp.datasource.entity.Teacher;
-import com.lab365.app.pcp.service.TeacherService;
+import com.lab365.app.pcp.service.IGenericService;
 import com.lab365.app.pcp.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import static com.lab365.app.pcp.infra.utils.Util.toJSON;
 @RequiredArgsConstructor
 @RequestMapping(value = "docentes", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TeacherController {
-    private final TeacherService service;
+    private final IGenericService<Teacher> service;
     private final UserService userService;
 
     @PostMapping
@@ -60,7 +60,7 @@ public class TeacherController {
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasAnyRole('ADM')")
+    @PreAuthorize("hasRole('ADM')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.info("DELETE /docentes/{}", id);
         service.delete(id);

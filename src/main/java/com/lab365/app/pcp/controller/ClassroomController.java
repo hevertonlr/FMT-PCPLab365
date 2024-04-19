@@ -3,13 +3,14 @@ package com.lab365.app.pcp.controller;
 import com.lab365.app.pcp.controller.dto.request.ClassroomRequest;
 import com.lab365.app.pcp.controller.dto.response.ClassroomResponse;
 import com.lab365.app.pcp.datasource.entity.Classroom;
-import com.lab365.app.pcp.service.ClassroomService;
+import com.lab365.app.pcp.service.IGenericService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +22,7 @@ import static com.lab365.app.pcp.infra.utils.Util.toJSON;
 @RequiredArgsConstructor
 @RequestMapping(value = "turmas", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ClassroomController {
-    private final ClassroomService service;
+    private final IGenericService<Classroom> service;
 
     @PostMapping
     public ResponseEntity<ClassroomResponse> create(@Valid @RequestBody ClassroomRequest request) {
@@ -54,6 +55,7 @@ public class ClassroomController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADM')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.info("DELETE /turmas/{}", id);
         service.delete(id);

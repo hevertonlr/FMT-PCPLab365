@@ -28,10 +28,8 @@ public class UserController {
     private final UserService service;
     private final TokenService tokenService;
 
-    /**
-     * TODO: VERIFICAR PERMISSÃO DE CADASTRO
-     */
     @PostMapping("cadastro")
+    //@PreAuthorize("hasRole('ADM')")
     public ResponseEntity<SuccessResponse> register(@Valid @RequestBody RegisterRequest request) {
         log.info("POST /cadastro -> username: {}", request.username());
         User user = request.toEntity();

@@ -5,7 +5,7 @@ import com.lab365.app.pcp.controller.dto.response.CourseResponse;
 import com.lab365.app.pcp.controller.dto.response.SubjectResponse;
 import com.lab365.app.pcp.datasource.entity.Course;
 import com.lab365.app.pcp.datasource.entity.Subject;
-import com.lab365.app.pcp.service.CourseService;
+import com.lab365.app.pcp.service.IGenericService;
 import com.lab365.app.pcp.service.SubjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,7 @@ import static com.lab365.app.pcp.infra.utils.Util.toJSON;
 @RequiredArgsConstructor
 @RequestMapping(value = "cursos", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CourseController {
-    private final CourseService service;
+    private final IGenericService<Course> service;
     private final SubjectService subjectService;
 
     @PostMapping
@@ -39,7 +40,7 @@ public class CourseController {
 
     @GetMapping("{id}")
     public ResponseEntity<CourseResponse> findById(@PathVariable Long id) {
-        log.info("GET /cursos/{} -> Início", id);
+        log.info("GET /cursos/{}", id);
         Course entity = service.findById(id);
         log.info("GET /cursos/{} -> Encontrado", id);
         CourseResponse response = CourseResponse.fromEntity(entity);
@@ -58,16 +59,17 @@ public class CourseController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADM')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.info("DELETE /cursos/{}", id);
         service.delete(id);
         log.info("DELETE /cursos/{} -> Excluído", id);
-        return ResponseEntity.noContent().build(); // Retorna 204
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "{id}/materias")
     public ResponseEntity<List<SubjectResponse>> list(@PathVariable Long id) {
-        log.info("GET /cursos/{}/materias -> Início", id);
+        log.info("GET /cursos/{}/materias", id);
         List<Subject> entities = subjectService.findAllByCourseId(id);
         log.info("GET /cursos/{}/materias -> Encontrados {} registros", id, entities.size());
         List<SubjectResponse> response = SubjectResponse.fromEntity(entities);
