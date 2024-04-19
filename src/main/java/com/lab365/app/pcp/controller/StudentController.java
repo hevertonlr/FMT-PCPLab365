@@ -2,9 +2,13 @@ package com.lab365.app.pcp.controller;
 
 import com.lab365.app.pcp.controller.dto.request.StudentCreateRequest;
 import com.lab365.app.pcp.controller.dto.request.StudentUpdateRequest;
+import com.lab365.app.pcp.controller.dto.response.GradeResponse;
 import com.lab365.app.pcp.controller.dto.response.StudentResponse;
+import com.lab365.app.pcp.controller.dto.response.StudentTotalScoreResponse;
 import com.lab365.app.pcp.datasource.entity.Classroom;
+import com.lab365.app.pcp.datasource.entity.Grade;
 import com.lab365.app.pcp.datasource.entity.Student;
+import com.lab365.app.pcp.service.GradeService;
 import com.lab365.app.pcp.service.IGenericService;
 import com.lab365.app.pcp.service.UserService;
 import jakarta.validation.Valid;
@@ -28,6 +32,7 @@ public class StudentController {
     private final IGenericService<Student> service;
     private final UserService userService;
     private final IGenericService<Classroom> classroomService;
+    private final GradeService gradeService;
 
     @PostMapping
     @PreAuthorize("hasRole('ADM')")
@@ -37,11 +42,10 @@ public class StudentController {
         userService.save(entity.getUser());
         Classroom classroom = classroomService.findById(request.classroomid());
         entity.setClassroom(classroom);
-
-        entity = service.save(entity);
         log.info("POST /alunos -> Cadastrado");
-        log.debug("POST /alunos -> Response Body:\n{}\n", toJSON(entity));
-        return ResponseEntity.status(HttpStatus.CREATED).body(StudentResponse.fromEntity(entity));
+        StudentResponse response = StudentResponse.fromEntity(service.save(entity));
+        log.debug("POST /alunos -> Response Body:\n{}\n", toJSON(response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("{id}")
@@ -49,8 +53,9 @@ public class StudentController {
         log.info("GET /alunos/{} -> Início", id);
         Student entity = service.findById(id);
         log.info("GET /alunos/{} -> Encontrado", id);
-        log.debug("GET /alunos/{} -> Response Body:\n{}\n", id, toJSON(entity));
-        return ResponseEntity.ok(StudentResponse.fromEntity(entity));
+        StudentResponse response = StudentResponse.fromEntity(entity);
+        log.debug("GET /alunos/{} -> Response Body:\n{}\n", id, toJSON(response));
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("{id}")
@@ -58,10 +63,10 @@ public class StudentController {
         log.info("PUT /alunos/{} -> Início", id);
         Student entity = request.toEntity();
         entity.setId(id);
-        entity = service.save(entity);
+        StudentResponse response = StudentResponse.fromEntity(service.save(entity));
         log.info("PUT /alunos/{} -> Atualizado", id);
-        log.debug("PUT /alunos/{} -> Response Body:\n{}\n", id, toJSON(entity));
-        return ResponseEntity.ok(StudentResponse.fromEntity(entity));
+        log.debug("PUT /alunos/{} -> Response Body:\n{}\n", id, toJSON(response));
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("{id}")
@@ -78,7 +83,26 @@ public class StudentController {
         log.info("GET /alunos -> Início");
         List<Student> entities = service.findAll();
         log.info("GET /alunos -> Encontrados {} registros", entities.size());
-        log.debug("GET /alunos -> Response Body:\n{}\n", toJSON(entities));
-        return ResponseEntity.ok(StudentResponse.fromEntity(entities));
+        List<StudentResponse> response = StudentResponse.fromEntity(entities);
+        log.debug("GET /alunos -> Response Body:\n{}\n", toJSON(response));
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = "{id}/notas")
+    public ResponseEntity<List<GradeResponse>> listGradesBy(@PathVariable Long id) {
+        log.info("GET /alunos/{}/notas", id);
+        List<Grade> entities = gradeService.findAllByStudentId(id);
+        log.info("GET /alunos/{}/notas -> Encontrados {} registros", id, entities.size());
+        List<GradeResponse> response = GradeResponse.fromEntity(entities);
+        log.debug("GET /alunos/{}/notas -> Response Body:\n{}\n", id, toJSON(response));
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = "{id}/pontuacao")
+    public ResponseEntity<StudentTotalScoreResponse> getScore(@PathVariable Long id) {
+        log.info("GET /alunos/{}/notas", id);
+        StudentTotalScoreResponse response = new StudentTotalScoreResponse(gradeService.getScore(id));
+        log.debug("GET /alunos/{}/notas -> Response Body:\n{}\n", id, toJSON(response));
+        return ResponseEntity.ok(response);
     }
 }

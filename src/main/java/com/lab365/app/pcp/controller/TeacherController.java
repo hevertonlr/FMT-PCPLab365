@@ -32,11 +32,10 @@ public class TeacherController {
         log.info("POST /docentes");
         Teacher entity = request.toEntity();
         userService.save(entity.getUser());
-
-        entity = service.save(entity);
+        TeacherResponse response = TeacherResponse.fromEntity(service.save(entity));
         log.info("POST /docentes -> Cadastrado");
-        log.debug("POST /docentes -> Response Body:\n{}\n", toJSON(entity));
-        return ResponseEntity.status(HttpStatus.CREATED).body(TeacherResponse.fromEntity(entity));
+        log.debug("POST /docentes -> Response Body:\n{}\n", toJSON(response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("{id}")
@@ -53,10 +52,10 @@ public class TeacherController {
         log.info("PUT /docentes/{} -> Início", id);
         Teacher entity = request.toEntity();
         entity.setId(id);
-        entity = service.save(entity);
+        TeacherResponse response = TeacherResponse.fromEntity(service.save(entity));
         log.info("PUT /docentes/{} -> Atualizado", id);
-        log.debug("PUT /docentes/{} -> Response Body:\n{}\n", id, toJSON(entity));
-        return ResponseEntity.ok(TeacherResponse.fromEntity(entity));
+        log.debug("PUT /docentes/{} -> Response Body:\n{}\n", id, toJSON(response));
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("{id}")
@@ -73,7 +72,8 @@ public class TeacherController {
         log.info("GET /docentes -> Início");
         List<Teacher> entities = service.findAll();
         log.info("GET /docentes -> Encontrados {} registros", entities.size());
-        log.debug("GET /docentes -> Response Body:\n{}\n", toJSON(entities));
-        return ResponseEntity.ok(TeacherResponse.fromEntity(entities));
+        List<TeacherResponse> response = TeacherResponse.fromEntity(entities);
+        log.debug("GET /docentes -> Response Body:\n{}\n", toJSON(response));
+        return ResponseEntity.ok(response);
     }
 }

@@ -21,8 +21,8 @@ public class SubjectService extends GenericService<Subject> {
     }
 
 
-    public List<Subject> findAllByCourseId(Long courseId) {
-        List<Subject> entities = ((SubjectRepository) super.repository).findAllByCourseId(courseId);
+    public List<Subject> findAllByCourseId(Long id) {
+        List<Subject> entities = ((SubjectRepository) super.repository).findAllByCourseId(id);
         if (entities.isEmpty())
             throw new NotFoundException("Nenhum registro a listar");
 

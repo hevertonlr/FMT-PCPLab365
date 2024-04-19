@@ -27,8 +27,9 @@ public class SubjectController {
         log.info("POST /materias");
         Subject entity = service.save(request.toEntity());
         log.info("POST /materias -> Cadastrado");
-        log.debug("POST /materias -> Response Body:\n{}\n", toJSON(entity));
-        return ResponseEntity.status(HttpStatus.CREATED).body(SubjectResponse.fromEntity(entity));
+        SubjectResponse response = SubjectResponse.fromEntity(entity);
+        log.debug("POST /materias -> Response Body:\n{}\n", toJSON(response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("{id}")
@@ -46,8 +47,9 @@ public class SubjectController {
         log.info("PUT /materias/{}", id);
         Subject entity = service.save(request.toEntity());
         log.info("PUT /materias/{} -> Atualizado", id);
-        log.debug("PUT /materias/{} -> Response Body:\n{}\n", id, toJSON(entity));
-        return ResponseEntity.ok(SubjectResponse.fromEntity(entity));
+        SubjectResponse response = SubjectResponse.fromEntity(entity);
+        log.debug("PUT /materias/{} -> Response Body:\n{}\n", id, toJSON(response));
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("{id}")

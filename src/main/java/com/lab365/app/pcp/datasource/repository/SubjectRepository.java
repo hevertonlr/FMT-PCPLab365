@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface SubjectRepository extends IGenericRepository<Subject> {
-    List<Subject> findAllByCourseId(Long courseId);
+    List<Subject> findAllByCourseId(Long id);
 }
