@@ -36,7 +36,7 @@ public class UserService extends GenericService<User> {
                     String rolename = entity.getRole().getName().toUpperCase();
                     roleRepository.findByName(rolename).ifPresentOrElse(role -> {
                         entity.setRole(role);
-                        entity.setPassword(bCryptPasswordEncoder.encode(entity.getPassword()));
+                        //entity.setPassword(bCryptPasswordEncoder.encode(entity.getPassword()));
                         super.save(entity);
                         log.debug("Salvando: Registro criado -> \n{}\n", toJSON(entity));
                     }, () -> {

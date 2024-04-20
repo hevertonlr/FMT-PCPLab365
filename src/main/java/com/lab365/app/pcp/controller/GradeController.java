@@ -1,6 +1,7 @@
 package com.lab365.app.pcp.controller;
 
-import com.lab365.app.pcp.controller.dto.request.GradeRequest;
+import com.lab365.app.pcp.controller.dto.request.GradeCreateRequest;
+import com.lab365.app.pcp.controller.dto.request.GradeUpdateRequest;
 import com.lab365.app.pcp.controller.dto.response.GradeResponse;
 import com.lab365.app.pcp.datasource.entity.Grade;
 import com.lab365.app.pcp.datasource.entity.Student;
@@ -13,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static com.lab365.app.pcp.infra.utils.Util.toJSON;
@@ -30,7 +30,7 @@ public class GradeController {
 
 
     @PostMapping
-    public ResponseEntity<GradeResponse> create(@Valid @RequestBody GradeRequest request) {
+    public ResponseEntity<GradeResponse> create(@Valid @RequestBody GradeCreateRequest request) {
         log.info("POST /notas");
         Grade entity = request.toEntity();
         Student student = studentService.findById(request.studentid());
@@ -56,17 +56,17 @@ public class GradeController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<GradeResponse> update(@Valid @RequestBody GradeRequest request, @PathVariable Long id) {
+    public ResponseEntity<GradeResponse> update(@Valid @RequestBody GradeUpdateRequest request, @PathVariable Long id) {
         log.info("PUT /notas/{}", id);
-        Grade entity = service.save(request.toEntity());
+        Grade entity = request.toEntity();
+        entity.setId(id);
         log.info("PUT /notas/{} -> Atualizado", id);
-        GradeResponse response = GradeResponse.fromEntity(entity);
+        GradeResponse response = GradeResponse.fromEntity(service.save(entity));
         log.debug("PUT /notas/{} -> Response Body:\n{}\n", id, toJSON(response));
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasRole('ADM')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.info("DELETE /notas/{}", id);
         service.delete(id);

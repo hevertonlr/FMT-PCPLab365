@@ -5,10 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 
 @Data
 @Entity
+@DynamicUpdate
 @Table(name = "papel", indexes = @Index(columnList = "nome"))
 public class Role extends GenericEntity<Role> implements GrantedAuthority {
     @Column(name = "nome", nullable = false)
@@ -20,8 +22,7 @@ public class Role extends GenericEntity<Role> implements GrantedAuthority {
     }
 
     @Override
-    public Role update(Role source) {
-        if (!source.getName().isBlank()) setName(source.getName());
-        return source;
+    public void update(Role source) {
+        if (!source.getName().isBlank()) this.setName(source.getName());
     }
 }

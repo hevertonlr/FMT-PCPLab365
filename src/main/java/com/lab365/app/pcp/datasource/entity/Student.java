@@ -8,11 +8,13 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
 
 @Data
 @Entity
+@DynamicUpdate
 @Table(name = "aluno")
 public class Student extends GenericEntity<Student> {
     @Column(name = "nome", nullable = false)
@@ -25,7 +27,6 @@ public class Student extends GenericEntity<Student> {
     private LocalDate birthday;
 
     @OneToOne
-    @JsonIgnoreProperties("students")
     @JoinColumn(name = "id_usuario", nullable = false, unique = true)
     private User user;
 
@@ -35,10 +36,9 @@ public class Student extends GenericEntity<Student> {
     private Classroom classroom;
 
     @Override
-    public Student update(Student source) {
-        if (!source.getName().isBlank()) setName(source.getName());
-        if (source.getBirthday() != null) setBirthday(source.getBirthday());
-        if (source.getClassroom() != null) setClassroom(source.getClassroom());
-        return source;
+    public void update(Student source) {
+        if (!source.getName().isBlank()) this.setName(source.getName());
+        if (source.getBirthday() != null) this.setBirthday(source.getBirthday());
+        if (source.getClassroom() != null) this.setClassroom(source.getClassroom());
     }
 }

@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static com.lab365.app.pcp.infra.utils.Util.toJSON;
@@ -45,15 +44,15 @@ public class SubjectController {
     @PutMapping("{id}")
     public ResponseEntity<SubjectResponse> update(@Valid @RequestBody SubjectRequest request, @PathVariable Long id) {
         log.info("PUT /materias/{}", id);
-        Subject entity = service.save(request.toEntity());
+        Subject entity = request.toEntity();
+        entity.setId(id);
         log.info("PUT /materias/{} -> Atualizado", id);
-        SubjectResponse response = SubjectResponse.fromEntity(entity);
+        SubjectResponse response = SubjectResponse.fromEntity(service.save(entity));
         log.debug("PUT /materias/{} -> Response Body:\n{}\n", id, toJSON(response));
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasRole('ADM')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.info("DELETE /materias/{}", id);
         service.delete(id);

@@ -3,9 +3,12 @@ package com.lab365.app.pcp.datasource.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Data
 @Entity
+@DynamicUpdate
 @Table(name = "usuario")
 public class User extends GenericEntity<User> {
 
@@ -20,10 +23,13 @@ public class User extends GenericEntity<User> {
     @JoinColumn(name = "id_papel", nullable = false)
     private Role role;
 
+    public void setPassword(String password) {
+        this.password = new BCryptPasswordEncoder().encode(password);
+    }
+
     @Override
-    public User update(User source) {
-        if (!source.getPassword().isBlank()) setPassword(source.getPassword());
-        if (source.getRole() != null) setRole(source.getRole());
-        return source;
+    public void update(User source) {
+        if (!source.getPassword().isBlank()) this.setPassword(source.getPassword());
+        if (source.getRole() != null) this.setRole(source.getRole());
     }
 }

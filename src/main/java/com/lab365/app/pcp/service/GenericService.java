@@ -4,6 +4,7 @@ import com.lab365.app.pcp.datasource.entity.GenericEntity;
 import com.lab365.app.pcp.datasource.repository.IGenericRepository;
 import com.lab365.app.pcp.infra.exception.InvalidException;
 import com.lab365.app.pcp.infra.exception.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,10 @@ import static com.lab365.app.pcp.infra.utils.Util.toJSON;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public abstract class GenericService<T extends GenericEntity<T>> implements IGenericService<T> {
     protected final IGenericRepository<T> repository;
-
-    public GenericService(IGenericRepository<T> repository) {
-        this.repository = repository;
-    }
+    private T entity;
 
     @Override
     public List<T> findAll() {
@@ -44,14 +43,13 @@ public abstract class GenericService<T extends GenericEntity<T>> implements IGen
     }
 
     @Override
-    public T save(T entity) {
+    public T save(T source) {
         try {
-            boolean isCreation = entity.getId() == null;
+            boolean isCreation = source.getId() == null;
+            T entity = isCreation ? source : findById(source.getId());
+            if (!isCreation) entity.update(source);
 
-            T finalEntity = repository.save(isCreation ? entity : repository
-                    .findById(entity.getId())
-                    .map(existent -> existent.update(entity))
-                    .orElse(entity));
+            T finalEntity = repository.save(entity);
 
             String action = isCreation ? "criado" : "alterado";
             log.info("Salvando: Registro {} com sucesso.", action);

@@ -1,8 +1,11 @@
 package com.lab365.app.pcp.controller;
 
-import com.lab365.app.pcp.controller.dto.request.ClassroomRequest;
+import com.lab365.app.pcp.controller.dto.request.ClassroomCreateRequest;
+import com.lab365.app.pcp.controller.dto.request.ClassroomUpdateRequest;
 import com.lab365.app.pcp.controller.dto.response.ClassroomResponse;
 import com.lab365.app.pcp.datasource.entity.Classroom;
+import com.lab365.app.pcp.datasource.entity.Course;
+import com.lab365.app.pcp.datasource.entity.Teacher;
 import com.lab365.app.pcp.service.IGenericService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,13 +25,19 @@ import static com.lab365.app.pcp.infra.utils.Util.toJSON;
 @RequestMapping(value = "turmas", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ClassroomController {
     private final IGenericService<Classroom> service;
+    private final IGenericService<Teacher> teacherService;
+    private final IGenericService<Course> courseService;
 
     @PostMapping
-    public ResponseEntity<ClassroomResponse> create(@Valid @RequestBody ClassroomRequest request) {
+    public ResponseEntity<ClassroomResponse> create(@Valid @RequestBody ClassroomCreateRequest request) {
         log.info("POST /turmas");
-        Classroom entity = service.save(request.toEntity());
+        Classroom entity = request.toEntity();
+        Teacher teacher = teacherService.findById(request.teacherid());
+        entity.setTeacher(teacher);
+        Course course = courseService.findById(request.courseid());
+        entity.setCourse(course);
         log.info("POST /turmas -> Cadastrado");
-        ClassroomResponse response = ClassroomResponse.fromEntity(entity);
+        ClassroomResponse response = ClassroomResponse.fromEntity(service.save(entity));
         log.debug("POST /turmas -> Response Body:\n{}\n", toJSON(response));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -45,17 +53,17 @@ public class ClassroomController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ClassroomResponse> update(@Valid @RequestBody ClassroomRequest request, @PathVariable Long id) {
+    public ResponseEntity<ClassroomResponse> update(@Valid @RequestBody ClassroomUpdateRequest request, @PathVariable Long id) {
         log.info("PUT /turmas/{}", id);
-        Classroom entity = service.save(request.toEntity());
+        Classroom entity = request.toEntity();
+        entity.setId(id);
         log.info("PUT /turmas/{} -> Atualizado", id);
-        ClassroomResponse response = ClassroomResponse.fromEntity(entity);
+        ClassroomResponse response = ClassroomResponse.fromEntity(service.save(entity));
         log.debug("PUT /turmas/{} -> Response Body:\n{}\n", id, toJSON(response));
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasRole('ADM')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.info("DELETE /turmas/{}", id);
         service.delete(id);
@@ -70,6 +78,6 @@ public class ClassroomController {
         log.info("GET /turmas -> Encontrados {} registros", entities.size());
         List<ClassroomResponse> response = ClassroomResponse.fromEntity(entities);
         log.debug("GET /turmas -> Response Body:\n{}\n", toJSON(response));
-        return ResponseEntity.ok(ClassroomResponse.fromEntity(entities));
+        return ResponseEntity.ok(response);
     }
 }

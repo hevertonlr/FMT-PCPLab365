@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.List;
 
 @Data
 @Entity
+@DynamicUpdate
 @Table(name = "curso")
 public class Course extends GenericEntity<Course> {
 
@@ -26,8 +28,7 @@ public class Course extends GenericEntity<Course> {
     private List<Subject> subjects;
 
     @Override
-    public Course update(Course source) {
-        if (!source.getName().isBlank()) setName(source.getName());
-        return source;
+    public void update(Course source) {
+        if (!source.getName().isBlank()) this.setName(source.getName());
     }
 }

@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,15 +50,15 @@ public class CourseController {
     @PutMapping("{id}")
     public ResponseEntity<CourseResponse> update(@Valid @RequestBody CourseRequest request, @PathVariable Long id) {
         log.info("PUT /cursos/{}", id);
-        Course entity = service.save(request.toEntity());
+        Course entity = request.toEntity();
+        entity.setId(id);
         log.info("PUT /cursos/{} -> Atualizado", id);
-        CourseResponse response = CourseResponse.fromEntity(entity);
+        CourseResponse response = CourseResponse.fromEntity(service.save(entity));
         log.debug("PUT /cursos/{} -> Response Body:\n{}\n", id, toJSON(response));
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasRole('ADM')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.info("DELETE /cursos/{}", id);
         service.delete(id);

@@ -43,14 +43,16 @@ public class TokenService {
 
     private String generateToken(User user) {
         Instant now = Instant.now();
-        JwtClaimsSet claimsSet = JwtClaimsSet.builder()
+
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer(appName)
                 .issuedAt(now)
-                .claim("role", user.getRole().getName())
+                .claim("scope", user.getRole().getAuthority())
                 .expiresAt(now.plusSeconds(EXPIRATION_TIME))
-                .subject(user.getUsername())
+                .subject(user.getId().toString())
                 .build();
-        return jwtEncoder.encode(JwtEncoderParameters.from(claimsSet)).getTokenValue();
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
 }

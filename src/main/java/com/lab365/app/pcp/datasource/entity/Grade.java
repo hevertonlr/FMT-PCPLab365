@@ -9,16 +9,18 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
 @Entity
+@DynamicUpdate
 @Table(name = "notas")
 public class Grade extends GenericEntity<Grade> {
     @ColumnDefault(value = "0.00")
-    @Column(name = "valor", precision = 5, scale = 2, nullable = false)
+    @Column(name = "valor", precision = 5, scale = 2)
     private BigDecimal value;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
@@ -43,12 +45,11 @@ public class Grade extends GenericEntity<Grade> {
     private Subject subject;
 
     @Override
-    public Grade update(Grade source) {
-        if (!source.getValue().equals(BigDecimal.ZERO)) setValue(source.getValue());
-        if (source.getDate() != null) setDate(source.getDate());
-        if (source.getStudent() != null) setStudent(source.getStudent());
-        if (source.getTeacher() != null) setTeacher(source.getTeacher());
-        if (source.getSubject() != null) setSubject(source.getSubject());
-        return source;
+    public void update(Grade source) {
+        if (source.getValue() != null && !source.getValue().equals(BigDecimal.ZERO)) this.setValue(source.getValue());
+        if (source.getDate() != null) this.setDate(source.getDate());
+        if (source.getStudent() != null) this.setStudent(source.getStudent());
+        if (source.getTeacher() != null) this.setTeacher(source.getTeacher());
+        if (source.getSubject() != null) this.setSubject(source.getSubject());
     }
 }

@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Data
 @DynamicUpdate
 @MappedSuperclass
-public abstract class GenericEntity<T> extends Auditable<String> implements Serializable, IGenericEntity<T> {
+public abstract class GenericEntity<T> extends Auditable<Long> implements Serializable, IGenericEntity<T> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
