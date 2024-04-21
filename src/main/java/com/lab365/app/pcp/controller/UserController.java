@@ -10,7 +10,6 @@ import com.lab365.app.pcp.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,9 +32,9 @@ public class UserController {
         log.info("POST /cadastro -> username: {}", request.username());
         User user = request.toEntity();
         service.save(user);
-        log.info("POST /cadastro -> SUCCESS");
-        log.debug("POST /cadastro -> CREATED \n{}\n", toJSON(user));
-        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessResponse("Usuário Criado com Sucesso!"));
+        log.info("POST /cadastro -> Cadastrado");
+        log.debug("POST /cadastro -> Response Body:\n{}\n", toJSON(user));
+        return SuccessResponse.toResponseEntity("Usuário Criado com Sucesso!");
     }
 
     @PostMapping("login")

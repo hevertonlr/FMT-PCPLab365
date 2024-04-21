@@ -1,5 +1,6 @@
 package com.lab365.app.pcp.datasource.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Index;
@@ -9,7 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 
 @Data
-@Entity
+@Entity(name = "Papel")
 @DynamicUpdate
 @Table(name = "papel", indexes = @Index(columnList = "nome"))
 public class Role extends GenericEntity<Role> implements GrantedAuthority {
@@ -17,6 +18,7 @@ public class Role extends GenericEntity<Role> implements GrantedAuthority {
     private String name;
 
     @Override
+    @JsonIgnore
     public String getAuthority() {
         return this.name;
     }

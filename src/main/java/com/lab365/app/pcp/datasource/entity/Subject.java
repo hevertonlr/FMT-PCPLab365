@@ -7,7 +7,7 @@ import lombok.ToString;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Data
-@Entity
+@Entity(name = "Matéria")
 @DynamicUpdate
 @Table(name = "materia")
 public class Subject extends GenericEntity<Subject> {
@@ -16,7 +16,7 @@ public class Subject extends GenericEntity<Subject> {
 
     @ManyToOne
     @ToString.Exclude
-    @JsonIgnoreProperties("subjects")
+    @JsonIgnoreProperties({"subjects", "students", "teacher"})
     @JoinColumn(name = "id_curso", nullable = false)
     private Course course;
 

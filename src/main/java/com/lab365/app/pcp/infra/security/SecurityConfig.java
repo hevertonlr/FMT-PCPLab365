@@ -41,47 +41,50 @@ public class SecurityConfig {
     @Value("${jwt.private.key}")
     RSAPrivateKey privateKey;
 
+    /**
+     *
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/cadastro").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/cadastro").hasRole(RolesEnum.ADM.toString())
 
                                 .requestMatchers(HttpMethod.DELETE).hasRole(RolesEnum.ADM.toString())
 
-                                .requestMatchers(antMatcher("/alunos/{}/**"))
-                                .hasAnyAuthority(
-                                        RolesEnum.ADM.toString(),
+                                .requestMatchers(antMatcher(HttpMethod.POST, "/alunos"),
+                                        antMatcher(HttpMethod.POST, "/docentes"))
+                                .hasRole(RolesEnum.ADM.toString())
+
+
+                                .requestMatchers(antMatcher(HttpMethod.GET, "/alunos/{id:[\\d+]}/notas"),
+                                        antMatcher(HttpMethod.GET, "/alunos/{id:[\\d+]}/pontuacao"))
+                                .hasAnyRole(RolesEnum.ADM.toString(),
                                         RolesEnum.PEDAGOGICO.toString(),
                                         RolesEnum.ALUNO.toString())
 
                                 .requestMatchers(antMatcher("/turmas/**"),
                                         antMatcher("/cursos/**"),
                                         antMatcher("/materias/**"),
-                                        antMatcher("/docentes/**"),
                                         antMatcher("/alunos/**"))
                                 .hasAnyRole(RolesEnum.ADM.toString(), RolesEnum.PEDAGOGICO.toString())
 
-                                .requestMatchers(antMatcher("/docentes/**")).hasRole(RolesEnum.RECRUITER.toString())
+                                .requestMatchers(antMatcher("/docentes/**"))
+                                .hasAnyRole(RolesEnum.ADM.toString(), RolesEnum.PEDAGOGICO.toString(), RolesEnum.RECRUITER.toString())
 
-                                .requestMatchers(antMatcher(HttpMethod.POST, "/notas/**"),
-                                        antMatcher(HttpMethod.PUT, "/notas/**"),
-                                        antMatcher(HttpMethod.GET, "/notas/**"))
+                                .requestMatchers(antMatcher("/notas/**"))
                                 .hasAnyRole(RolesEnum.ADM.toString(), RolesEnum.PROFESSOR.toString())
 
 
                                 .anyRequest().authenticated())
-
-                //.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
                 )
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-        //.oauth2ResourceServer(conf -> conf.jwt(jwt -> jwt.decoder(jwtDecoder())))
 
         ;
         return http.build();

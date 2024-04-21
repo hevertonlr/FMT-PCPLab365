@@ -22,9 +22,9 @@ public class GradeService extends GenericService<Grade> {
     public List<Grade> findAllByStudentId(Long id) {
         List<Grade> entities = ((GradeRepository) super.repository).findAllByStudentId(id);
         if (entities.isEmpty())
-            throw new NotFoundException("Nenhum registro a listar");
+            throw new NotFoundException("Nenhuma Nota a listar");
 
-        log.info("Listando: {} Registro(s) encontrado(s)", entities.size());
+        log.info("Listando: {} Nota(s) encontrada(s)", entities.size());
         return entities;
     }
 

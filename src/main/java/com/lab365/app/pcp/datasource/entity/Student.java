@@ -13,7 +13,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.time.LocalDate;
 
 @Data
-@Entity
+@Entity(name = "Aluno")
 @DynamicUpdate
 @Table(name = "aluno")
 public class Student extends GenericEntity<Student> {
@@ -27,11 +27,12 @@ public class Student extends GenericEntity<Student> {
     private LocalDate birthday;
 
     @OneToOne
+    @JsonIgnoreProperties("role")
     @JoinColumn(name = "id_usuario", nullable = false, unique = true)
     private User user;
 
     @ManyToOne
-    @JsonIgnoreProperties("students")
+    @JsonIgnoreProperties({"students", "teacher", "course"})
     @JoinColumn(name = "id_turma", nullable = false)
     private Classroom classroom;
 

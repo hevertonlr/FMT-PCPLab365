@@ -9,7 +9,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.List;
 
 @Data
-@Entity
+@Entity(name = "Curso")
 @DynamicUpdate
 @Table(name = "curso")
 public class Course extends GenericEntity<Course> {
@@ -23,7 +23,7 @@ public class Course extends GenericEntity<Course> {
     private List<Classroom> classrooms;
 
     @ToString.Exclude
-    @JsonIgnoreProperties("course")
+    @JsonIgnoreProperties({"course", "user"})
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
     private List<Subject> subjects;
 

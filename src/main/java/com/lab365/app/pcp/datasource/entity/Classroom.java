@@ -8,7 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import java.util.List;
 
 @Data
-@Entity
+@Entity(name = "Turma")
 @DynamicUpdate
 @Table(name = "turma")
 public class Classroom extends GenericEntity<Classroom> {
@@ -23,7 +23,7 @@ public class Classroom extends GenericEntity<Classroom> {
     private Teacher teacher;
 
     @ManyToOne
-    @JsonIgnoreProperties("classrooms")
+    @JsonIgnoreProperties({"classrooms", "students", "user"})
     @JoinColumn(name = "id_curso", nullable = false)
     private Course course;
 

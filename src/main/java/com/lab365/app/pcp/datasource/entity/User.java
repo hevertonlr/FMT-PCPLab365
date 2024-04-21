@@ -1,13 +1,13 @@
 package com.lab365.app.pcp.datasource.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Data
-@Entity
+@Entity(name = "Usuário")
 @DynamicUpdate
 @Table(name = "usuario")
 public class User extends GenericEntity<User> {
@@ -15,7 +15,7 @@ public class User extends GenericEntity<User> {
     @Column(name = "nome_usuario", nullable = false, unique = true)
     private String username;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "senha", nullable = false)
     private String password;
 

@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-@Entity
+@Entity(name = "Nota")
 @DynamicUpdate
 @Table(name = "notas")
 public class Grade extends GenericEntity<Grade> {
@@ -30,17 +30,17 @@ public class Grade extends GenericEntity<Grade> {
     private LocalDate date;
 
     @ManyToOne
-    @JsonIgnoreProperties("grades")
+    @JsonIgnoreProperties({"grades", "user", "classroom"})
     @JoinColumn(name = "id_aluno", nullable = false)
     private Student student;
 
     @ManyToOne
-    @JsonIgnoreProperties("grades")
+    @JsonIgnoreProperties({"grades", "user"})
     @JoinColumn(name = "id_professor")
     private Teacher teacher;
 
     @ManyToOne
-    @JsonIgnoreProperties("grades")
+    @JsonIgnoreProperties({"grades", "course"})
     @JoinColumn(name = "id_materia", nullable = false)
     private Subject subject;
 
