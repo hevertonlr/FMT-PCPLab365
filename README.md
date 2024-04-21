@@ -1,33 +1,29 @@
-# FMT-PCPLab365
+# FullStack [Education] - Módulo 1 - Projeto Avaliativo
 
-Este `README` documenta os endpoints disponíveis na API de Autenticação.
+## Contexto
+
+O LAB365 Developer, empresa líder no segmento tecnológico de gestão estudantil, está com um novo projeto intitulado
+labPCP, uma API Rest completa para gestão de cursos, turmas, conteúdos e docentes, que será futuramente integrada à
+soluções web de gestão em escolas e creches da rede pública.
+
+Esta é a documentação deste Projeto Avaliativo. Aqui você encontrará informações sobre a sua
+funcionalidade, como os endpoints disponíveis, seus métodos, parâmetros necessários, e exemplos de resposta.
+
+___
+
+## Base URL
+
+A URL base para todas as solicitações é `http://localhost:8080`.
 
 ## Endpoints
 
-### POST /cadastro
+### Cadastro
 
-- **Resumo**: Cadastra um novo usuário.
-- **ID da Operação**: register
+#### `POST /cadastro`
 
-**Corpo da Requisição**:
+Cadastra um novo usuário.
 
-```json
-{
-  "username": "",
-  "password": ""
-}
-```
-
-**Respostas**:
-
-- **200 OK**: Usuário cadastrado com sucesso.
-
-### POST /login
-
-- **Resumo**: Realiza o login de um usuário.
-- **ID da Operação**: login
-
-**Corpo da Requisição**:
+##### Corpo da Requisição
 
 ```json
 {
@@ -36,25 +32,54 @@ Este `README` documenta os endpoints disponíveis na API de Autenticação.
 }
 ```
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Login realizado com sucesso.
+- `201 Created`: Usuário cadastrado com sucesso.
+- `400 Bad Request`: Requisição inválida.
 
-### GET /docentes
+___
 
-- **Resumo**: Lista todos os docentes.
-- **ID da Operação**: list
+### Login
 
-**Respostas**:
+#### `POST /login`
 
-- **200 OK**: Retorna uma lista de docentes.
+Realiza o login de um usuário.
 
-### POST /docentes
+##### Corpo da Requisição
 
-- **Resumo**: Cria um novo docente.
-- **ID da Operação**: create
+O corpo da requisição deve conter um objeto JSON com as informações a serem atualizadas, seguindo o seguinte formato:
 
-**Corpo da Requisição**:
+```json
+{
+  "username": "",
+  "password": ""
+}
+```
+
+##### Respostas
+
+- `200 OK`: Login realizado com sucesso.
+- `401 Unauthorized`: Credenciais inválidas.
+- `400 Bad Request`: Requisição inválida.
+
+___
+
+### Docentes
+
+#### `GET /docentes`
+
+Lista todos os docentes.
+
+##### Respostas
+
+- `200 OK`: Retorna uma lista de docentes.
+- `404 Not Found`: Não há Docentes Cadastrados.
+
+#### `POST /docentes`
+
+Cria um novo docente.
+
+##### Corpo da Requisição
 
 ```json
 {
@@ -66,33 +91,33 @@ Este `README` documenta os endpoints disponíveis na API de Autenticação.
 }
 ```
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Docente criado com sucesso.
+- `200 OK`: Docente criado com sucesso.
+- `400 Bad Request`: Requisição inválida.
 
-### GET /docentes/{id}
+#### `GET /docentes/{id}`
 
-- **Resumo**: Obtém um docente pelo ID.
-- **ID da Operação**: findById
+Obtém um docente pelo ID.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID do docente (inteiro, obrigatório)
+- `id`: ID do docente (inteiro, obrigatório)
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Retorna os detalhes do docente.
+- `200 OK`: Retorna os detalhes do docente.
+- `404 Not Found`: Docente não encontrado.
 
-### PUT /docentes/{id}
+#### `PUT /docentes/{id}`
 
-- **Resumo**: Atualiza um docente existente.
-- **ID da Operação**: update
+Atualiza um docente existente.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID do docente (inteiro, obrigatório)
+- `id`: ID do docente (inteiro, obrigatório)
 
-**Corpo da Requisição**:
+##### Corpo da Requisição
 
 ```json
 {
@@ -101,63 +126,34 @@ Este `README` documenta os endpoints disponíveis na API de Autenticação.
 }
 ```
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Docente atualizado com sucesso.
+- `200 OK`: Docente atualizado com sucesso.
+- `400 Bad Request`: Requisição inválida.
+- `404 Not Found`: Docente não encontrado.
 
-### DELETE /docentes/{id}
+#### `DELETE /docentes/{id}`
 
-- **Resumo**: Exclui um docente pelo ID.
-- **ID da Operação**: delete
+Exclui um docente pelo ID.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID do docente (inteiro, obrigatório)
+- `id`: ID do docente (inteiro, obrigatório)
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Docente excluído com sucesso.
+- `204 No Content`: Docente excluído com sucesso.
+- `404 Not Found`: Docente não encontrado.
 
-### POST /cursos
+___
 
-- **Resumo**: Cria um novo curso.
-- **ID da Operação**: create
+### Cursos
 
-**Corpo da Requisição**:
+#### `POST /cursos`
 
-```json
-{
-  "name": ""
-}
-```
+Cria um novo curso.
 
-**Respostas**:
-
-- **200 OK**: Curso criado com sucesso.
-
-### GET /cursos/{id}
-
-- **Resumo**: Obtém um curso pelo ID.
-- **ID da Operação**: findById
-
-**Parâmetros**:
-
-- **id**: ID do curso (inteiro, obrigatório)
-
-**Respostas**:
-
-- **200 OK**: Retorna os detalhes do curso.
-
-### PUT /cursos/{id}
-
-- **Resumo**: Atualiza um curso existente.
-- **ID da Operação**: update
-
-**Parâmetros**:
-
-- **id**: ID do curso (inteiro, obrigatório)
-
-**Corpo da Requisição**:
+##### Corpo da Requisição
 
 ```json
 {
@@ -165,42 +161,81 @@ Este `README` documenta os endpoints disponíveis na API de Autenticação.
 }
 ```
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Curso atualizado com sucesso.
+- `200 OK`: Curso criado com sucesso.
+- `400 Bad Request`: Requisição inválida.
 
-### DELETE /cursos/{id}
+#### `GET /cursos/{id}`
 
-- **Resumo**: Exclui um curso pelo ID.
-- **ID da Operação**: delete
+Obtém um curso pelo ID.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID do curso (inteiro, obrigatório)
+- `id`: ID do curso (inteiro, obrigatório)
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Curso excluído com sucesso.
+- `200 OK`: Retorna os detalhes do curso.
+- `404 Not Found`: Curso não encontrado.
 
-### GET /cursos/{id}/materias
+#### `PUT /cursos/{id}`
 
-- **Resumo**: Lista as matérias de um curso.
-- **ID da Operação**: list
+Atualiza um curso existente.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID do curso (inteiro, obrigatório)
+- `id`: ID do curso (inteiro, obrigatório)
 
-**Respostas**:
+##### Corpo da Requisição
 
-- **200 OK**: Retorna uma lista de matérias do curso.
+```json
+{
+  "name": ""
+}
+```
 
-### POST /materias
+##### Respostas
 
-- **Resumo**: Cria uma nova matéria.
-- **ID da Operação**: create
+- `200 OK`: Curso atualizado com sucesso.
+- `400 Bad Request`: Requisição inválida.
+- `404 Not Found`: Curso não encontrado.
 
-**Corpo da Requisição**:
+#### `DELETE /cursos/{id}`
+
+Exclui um curso pelo ID.
+
+##### Parâmetros
+
+- `id`: ID do curso (inteiro, obrigatório)
+
+##### Respostas
+
+- `204 No Content`: Curso excluído com sucesso.
+- `404 Not Found`: Curso não encontrado.
+
+#### `GET /cursos/{id}/materias`
+
+Lista as matérias de um curso.
+
+##### Parâmetros
+
+- `id`: ID do curso (inteiro, obrigatório)
+
+##### Respostas
+
+- `200 OK`: Retorna uma lista de matérias do curso.
+- `404 Not Found`: Não há Matérias Cadastradas.
+
+___
+
+### Matérias
+
+#### `POST /materias`
+
+Cria uma nova matéria.
+
+##### Corpo da Requisição
 
 ```json
 {
@@ -209,33 +244,33 @@ Este `README` documenta os endpoints disponíveis na API de Autenticação.
 }
 ```
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Matéria criada com sucesso.
+- `200 OK`: Matéria criada com sucesso.
+- `400 Bad Request`: Requisição inválida.
 
-### GET /materias/{id}
+#### `GET /materias/{id}`
 
-- **Resumo**: Obtém uma matéria pelo ID.
-- **ID da Operação**: findById
+Obtém uma matéria pelo ID.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID da matéria (inteiro, obrigatório)
+- `id`: ID da matéria (inteiro, obrigatório)
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Retorna os detalhes da matéria.
+- `200 OK`: Retorna os detalhes da matéria.
+- `404 Not Found`: Matéria não encontrada.
 
-### PUT /materias/{id}
+#### `PUT /materias/{id}`
 
-- **Resumo**: Atualiza uma matéria existente.
-- **ID da Operação**: update
+Atualiza uma matéria existente.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID da matéria (inteiro, obrigatório)
+- `id`: ID da matéria (inteiro, obrigatório)
 
-**Corpo da Requisição**:
+##### Corpo da Requisição
 
 ```json
 {
@@ -244,38 +279,45 @@ Este `README` documenta os endpoints disponíveis na API de Autenticação.
 }
 ```
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Matéria atualizada com sucesso.
+- `200 OK`: Matéria atualizada com sucesso.
+- `400 Bad Request`: Requisição inválida.
+- `404 Not Found`: Matéria não encontrada.
 
-### DELETE /materias/{id}
+#### `DELETE /materias/{id}`
 
-- **Resumo**: Exclui uma matéria pelo ID.
-- **ID da Operação**: delete
+Exclui uma matéria pelo ID.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID da matéria (inteiro, obrigatório)
+- `id`: ID da matéria (inteiro, obrigatório)
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Matéria excluída com sucesso.
+- `204 No Content`: Matéria excluída com sucesso.
+- `404 Not Found`: Matéria não encontrada.
 
-### GET /turmas
+___
 
-- **Resumo**: Lista todas as turmas.
+### Turmas
+
+#### `GET /turmas`
+
+Lista todas as turmas.
+
 - **ID da Operação**: list
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Retorna uma lista de turmas.
+- `200 OK`: Retorna uma lista de turmas.
+- `404 Not Found`: Não há Turmas Cadastradas.
 
-### POST /turmas
+#### `POST /turmas`
 
-- **Resumo**: Cria uma nova turma.
-- **ID da Operação**: create
+Cria uma nova turma.
 
-**Corpo da Requisição**:
+##### Corpo da Requisição
 
 ```json
 {
@@ -285,33 +327,33 @@ Este `README` documenta os endpoints disponíveis na API de Autenticação.
 }
 ```
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Turma criada com sucesso.
+- `200 OK`: Turma criada com sucesso.
+- `400 Bad Request`: Requisição inválida.
 
-### GET /turmas/{id}
+#### `GET /turmas/{id}`
 
-- **Resumo**: Obtém uma turma pelo ID.
-- **ID da Operação**: findById
+Obtém uma turma pelo ID.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID da turma (inteiro, obrigatório)
+- `id`: ID da turma (inteiro, obrigatório)
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Retorna os detalhes da turma.
+- `200 OK`: Retorna os detalhes da turma.
+- `404 Not Found`: Turma não encontrada.
 
-### PUT /turmas/{id}
+#### `PUT /turmas/{id}`
 
-- **Resumo**: Atualiza uma turma existente.
-- **ID da Operação**: update
+Atualiza uma turma existente.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID da turma (inteiro, obrigatório)
+- `id`: ID da turma (inteiro, obrigatório)
 
-**Corpo da Requisição**:
+##### Corpo da Requisição
 
 ```json
 {
@@ -319,38 +361,45 @@ Este `README` documenta os endpoints disponíveis na API de Autenticação.
 }
 ```
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Turma atualizada com sucesso.
+- `200 OK`: Turma atualizada com sucesso.
+- `400 Bad Request`: Requisição inválida.
+- `404 Not Found`: Turma não encontrada.
 
-### DELETE /turmas/{id}
+#### `DELETE /turmas/{id}`
 
-- **Resumo**: Exclui uma turma pelo ID.
-- **ID da Operação**: delete
+Exclui uma turma pelo ID.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID da turma (inteiro, obrigatório)
+- `id`: ID da turma (inteiro, obrigatório)
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Turma excluída com sucesso.
+- `204 No Content`: Turma excluída com sucesso.
+- `404 Not Found`: Turma não encontrada.
 
-### GET /alunos
+___
 
-- **Resumo**: Lista todos os alunos.
+### Alunos
+
+#### `GET /alunos`
+
+Lista todos os alunos.
+
 - **ID da Operação**: list
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Retorna uma lista de alunos.
+- `200 OK`: Retorna uma lista de alunos.
+- `404 Not Found`: Não há Alunos Cadastrados.
 
-### POST /alunos
+#### `POST /alunos`
 
-- **Resumo**: Cria um novo aluno.
-- **ID da Operação**: create
+Cria um novo aluno.
 
-**Corpo da Requisição**:
+##### Corpo da Requisição
 
 ```json
 {
@@ -362,33 +411,33 @@ Este `README` documenta os endpoints disponíveis na API de Autenticação.
 }
 ```
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Aluno criado com sucesso.
+- `200 OK`: Aluno criado com sucesso.
+- `400 Bad Request`: Requisição inválida.
 
-### GET /alunos/{id}
+#### `GET /alunos/{id}`
 
-- **Resumo**: Obtém um aluno pelo ID.
-- **ID da Operação**: findById
+Obtém um aluno pelo ID.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID do aluno (inteiro, obrigatório)
+- `id`: ID do aluno (inteiro, obrigatório)
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Retorna os detalhes do aluno.
+- `200 OK`: Retorna os detalhes do aluno.
+- `404 Not Found`: Aluno não encontrado.
 
-### PUT /alunos/{id}
+#### `PUT /alunos/{id}`
 
-- **Resumo**: Atualiza um aluno existente.
-- **ID da Operação**: update
+Atualiza um aluno existente.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID do aluno (inteiro, obrigatório)
+- `id`: ID do aluno (inteiro, obrigatório)
 
-**Corpo da Requisição**:
+##### Corpo da Requisição
 
 ```json
 {
@@ -397,31 +446,60 @@ Este `README` documenta os endpoints disponíveis na API de Autenticação.
 }
 ```
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Aluno atualizado com sucesso.
+- `200 OK`: Aluno atualizado com sucesso.
+- `400 Bad Request`: Requisição inválida.
+- `404 Not Found`: Aluno não encontrado.
 
-### DELETE /alunos/{id}
+#### `DELETE /alunos/{id}`
 
-- **Resumo**: Exclui um aluno pelo ID.
-- **ID da Operação**: delete
+Exclui um aluno pelo ID.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID do aluno (inteiro, obrigatório)
+- `id`: ID do aluno (inteiro, obrigatório)
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Aluno excluído com sucesso.
+- `204 No Content`: Aluno excluído com sucesso.
+- `404 Not Found`: Aluno não encontrado.
 
-### GET /alunos/{id}/notas
+#### `GET /alunos/{id}/notas`
 
-### POST /notas
+Retorna as notas do aluno especificado pelo ID.
 
-- **Resumo**: Cria uma nova nota.
-- **ID da Operação**: create
+##### Parâmetros
 
-**Corpo da Requisição**:
+- `id`: ID do aluno (obrigatório, inteiro)
+
+##### Respostas
+
+- `200 OK`: Retorna uma lista de todas as Notas do Aluno.
+- `404 Not Found`: Não há Notas Cadastradas para o Aluno.
+
+### `GET /alunos/{id}/pontuacao`
+
+Retorna a pontuação do aluno especificado pelo ID.
+
+##### Parâmetros
+
+- `id`: ID do aluno (obrigatório, inteiro)
+
+##### Respostas
+
+- `200 OK`: Pontuação calculada com Sucesso.
+- `404 Not Found`: Aluno não encontrado.
+
+___
+
+### Notas
+
+#### `POST /notas`
+
+Cria uma nova nota.
+
+##### Corpo da Requisição
 
 ```json
 {
@@ -433,33 +511,33 @@ Este `README` documenta os endpoints disponíveis na API de Autenticação.
 }
 ```
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Nota criada com sucesso.
+- `200 OK`: Nota criada com sucesso.
+- `400 Bad Request`: Requisição inválida.
 
-### GET /notas/{id}
+#### `GET /notas/{id}`
 
-- **Resumo**: Obtém uma nota pelo ID.
-- **ID da Operação**: findById
+Obtém uma nota pelo ID.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID da nota (inteiro, obrigatório)
+- `id`: ID da nota (inteiro, obrigatório)
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Retorna os detalhes da nota.
+- `200 OK`: Retorna os detalhes da nota.
+- `404 Not Found`: Nota não encontrada.
 
-### PUT /notas/{id}
+#### `PUT /notas/{id}`
 
-- **Resumo**: Atualiza uma nota existente.
-- **ID da Operação**: update
+Atualiza uma nota existente.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID da nota (inteiro, obrigatório)
+- `id`: ID da nota (inteiro, obrigatório)
 
-**Corpo da Requisição**:
+##### Corpo da Requisição
 
 ```json
 {
@@ -468,21 +546,26 @@ Este `README` documenta os endpoints disponíveis na API de Autenticação.
 }
 ```
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Nota atualizada com sucesso.
+- `200 OK`: Nota atualizada com sucesso.
+- `400 Bad Request`: Requisição inválida.
+- `404 Not Found`: Nota não encontrada.
 
-### DELETE /notas/{id}
+#### `DELETE /notas/{id}`
 
-- **Resumo**: Exclui uma nota pelo ID.
-- **ID da Operação**: delete
+Exclui uma nota pelo ID.
 
-**Parâmetros**:
+##### Parâmetros
 
-- **id**: ID da nota (inteiro, obrigatório)
+- `id`: ID da nota (inteiro, obrigatório)
 
-**Respostas**:
+##### Respostas
 
-- **200 OK**: Nota excluída com sucesso.
+- `204 No Content`: Nota excluída com sucesso.
+- `404 Not Found`: Nota não encontrada.
 
-```
+## Tecnologias utilizadas:
+
+- JAVA
+- Spring Boot
