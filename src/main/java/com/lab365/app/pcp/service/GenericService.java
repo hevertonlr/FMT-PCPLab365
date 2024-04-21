@@ -21,7 +21,7 @@ import static java.text.MessageFormat.format;
 @RequiredArgsConstructor
 public abstract class GenericService<T extends GenericEntity<T>> implements IGenericService<T> {
     protected final IGenericRepository<T> repository;
-    protected String entityName = ((Class<?>) ((ParameterizedType) getClass().getGenericSuperclass())
+    protected final String entityName = ((Class<?>) ((ParameterizedType) getClass().getGenericSuperclass())
             .getActualTypeArguments()[0]).getAnnotation(Entity.class).name();
 
     @Override
