@@ -16,7 +16,7 @@ public class Subject extends GenericEntity<Subject> {
 
     @ManyToOne
     @ToString.Exclude
-    @JsonIgnoreProperties({"subjects", "students", "teacher"})
+    @JsonIgnoreProperties({"subjects", "classrooms"})
     @JoinColumn(name = "id_curso", nullable = false)
     private Course course;
 

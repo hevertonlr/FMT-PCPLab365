@@ -50,6 +50,12 @@ public class GradeController extends GenericController<Grade> {
         Student student = studentService.findById(request.studentid());
         entity.setStudent(student);
         Subject subject = subjectService.findById(request.subjectid());
+        if (!Objects.equals(student.getClassroom().getCourse().getId(), subject.getCourse().getId()))
+            throw new InvalidException("ALUNO informado não registrado nesta MATÉRIA");
+
+        if (!teacher.getClassrooms().containsAll(subject.getCourse().getClassrooms()))
+            throw new InvalidException("PROFESSOR informado não leciona um CURSO com esta MATÉRIA");
+
         entity.setSubject(subject);
         log.info("POST /notas -> Cadastrada");
         Grade response = super.service.save(entity);

@@ -1,6 +1,7 @@
 package com.lab365.app.pcp.datasource.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -11,6 +12,7 @@ import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Entity(name = "Aluno")
@@ -26,7 +28,7 @@ public class Student extends GenericEntity<Student> {
     @Column(name = "data_nascimento")
     private LocalDate birthday;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties("role")
     @JoinColumn(name = "id_usuario", nullable = false, unique = true)
     private User user;
@@ -42,4 +44,8 @@ public class Student extends GenericEntity<Student> {
         if (source.getBirthday() != null) this.setBirthday(source.getBirthday());
         if (source.getClassroom() != null) this.setClassroom(source.getClassroom());
     }
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "student", cascade = CascadeType.REMOVE)
+    private List<Grade> grades;
 }

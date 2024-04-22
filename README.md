@@ -1,9 +1,9 @@
-# FullStack [Education] - Módulo 1 - Projeto Avaliativo
+# ${\textsf{\color{#112bda}F\color{#e1278a}u\color{#ff8818}ll\color{#808080}Stack [Education]}}$<br/><sub>Módulo 1 - Projeto Avaliativo</sub>
 
 ## Contexto
 
 O LAB365 Developer, empresa líder no segmento tecnológico de gestão estudantil, está com um novo projeto intitulado
-labPCP, uma API Rest completa para gestão de cursos, turmas, conteúdos e docentes, que será futuramente integrada à
+labPCP, uma API Rest completa para gestão de cursos, turmas, conteúdos e docentes, que será futuramente integrada a
 soluções web de gestão em escolas e creches da rede pública.
 
 Esta é a documentação deste Projeto Avaliativo. Aqui você encontrará informações sobre a sua
@@ -11,39 +11,60 @@ funcionalidade, como os endpoints disponíveis, seus métodos, parâmetros neces
 
 ___
 
+# Executando
+
+Antes de começar, certifique-se de atualizar os dados de conexão de banco de dados.
+
+```
+spring.datasource.url=jdbc:postgresql://SEU_HOST_DE_BD/SUA_DATABASE_DE_BD
+spring.datasource.username=SEU_USUARIO_DE_BD
+spring.datasource.password=SUA_SENHA_DE_BD
+```
+
+# Autenticação
+
+Para garantir a segurança das suas requisições, nossa API utiliza tokens JWT (JSON Web Tokens) para autenticação. Isso
+significa que você deve incluir um token de autenticação válido em cada requisição ao servidor.
+
+## Obtendo seu Token JWT
+
+Para obter seu token JWT, você precisará fazer uma requisição `POST` para o endpoint `/login` com suas credenciais de
+usuário. Você receberá uma resposta contendo o token JWT que será utilizado para as próximas requisições.
+
+## Utilizando o Token JWT
+
+Com o token JWT em mãos, você deve incluí-lo no cabeçalho das suas requisições utilizando o esquema `Bearer`.
+
+```json
+{
+  "Authorization": "Bearer seu_token_jwt_aqui"
+}
+```
+
+Certifique-se de substituir `seu_token_jwt_aqui` pelo token que você obteve anteriormente.
+
+> [!NOTE]
+> O token JWT é sensível e deve ser mantido em segurança. Não compartilhe seu token publicamente ou com terceiros.
+
 ## Base URL
 
 A URL base para todas as solicitações é `http://localhost:8080`.
 
 ## Endpoints
 
-### Cadastro
-
-#### `POST /cadastro`
-
-Cadastra um novo usuário.
-
-##### Corpo da Requisição
-
-```json
-{
-  "username": "",
-  "password": ""
-}
-```
-
-##### Respostas
-
-- `201 Created`: Usuário cadastrado com sucesso.
-- `400 Bad Request`: Requisição inválida.
-
-___
-
-### Login
-
 #### `POST /login`
 
 Realiza o login de um usuário.
+
+> [!IMPORTANT]
+> Para primeiro acesso, utilizar como usuário e senha a palavra "admin"
+>
+> ```json
+> {
+> "username": "admin",
+> "password": "admin"
+> }
+> ```
 
 ##### Corpo da Requisição
 
@@ -51,8 +72,8 @@ O corpo da requisição deve conter um objeto JSON com as informações a serem 
 
 ```json
 {
-  "username": "",
-  "password": ""
+  "username": "string",
+  "password": "string"
 }
 ```
 
@@ -60,6 +81,41 @@ O corpo da requisição deve conter um objeto JSON com as informações a serem 
 
 - `200 OK`: Login realizado com sucesso.
 - `401 Unauthorized`: Credenciais inválidas.
+- `400 Bad Request`: Requisição inválida.
+
+___
+
+### Cadastro
+
+#### `POST /cadastro`
+
+Cadastra um novo usuário.\
+> **Observação**: Este usuário terá perfil ADM
+
+##### Corpo da Requisição
+
+```json
+{
+  "username": "string",
+  "password": "string"
+}
+```
+
+> [!IMPORTANT]
+> A Senha deve respeitar as seguintes regras:
+> - **Tamanho**: Entre 8 e 30 caracteres.
+> - **Espaços em Branco**: Sem espaços em branco.
+> - **Letras Maiúsculas**: Pelo menos 1 letra maiúscula.
+> - **Dígitos Numéricos**: Pelo menos 1 dígito numérico.
+> - **Caracteres Especiais**: Pelo menos 1 caractere especial (ex: !, @, #).
+> - **Sequências Numéricas Ilegais**: Sem sequências de mais de 2 dígitos consecutivos. (ex: 123, 456).
+> - **Sequências Alfabéticas Ilegais**: Sem sequências de mais de 2 letras consecutivas. (ex: abc, def).
+> - **Sequências de Teclado Ilegais**: Sem sequências de mais de 2 teclas consecutivas no teclado QWERTY dos EUA. (ex:
+    qwe, asd).
+
+##### Respostas
+
+- `201 Created`: Usuário cadastrado com sucesso.
 - `400 Bad Request`: Requisição inválida.
 
 ___
@@ -83,13 +139,16 @@ Cria um novo docente.
 
 ```json
 {
-  "name": "",
-  "entryDate": "",
-  "profile": "",
-  "login": "",
-  "password": ""
+  "name": "string",
+  "entryDate": "dd/mm/yyyy",
+  "profile": "PEDAGOGICO|RECRUITER|PROFESSOR",
+  "login": "string",
+  "password": "string"
 }
 ```
+
+> [!IMPORTANT]
+> O campo *password* deve respeitar as mesmas regras do cadastro de usuário
 
 ##### Respostas
 
@@ -121,8 +180,8 @@ Atualiza um docente existente.
 
 ```json
 {
-  "name": "",
-  "entryDate": ""
+  "name": "string",
+  "entryDate": "dd/mm/yyyy"
 }
 ```
 
@@ -157,7 +216,7 @@ Cria um novo curso.
 
 ```json
 {
-  "name": ""
+  "name": "string"
 }
 ```
 
@@ -191,7 +250,7 @@ Atualiza um curso existente.
 
 ```json
 {
-  "name": ""
+  "name": "string"
 }
 ```
 
@@ -239,7 +298,7 @@ Cria uma nova matéria.
 
 ```json
 {
-  "name": "",
+  "name": "string",
   "courseid": 0
 }
 ```
@@ -274,7 +333,7 @@ Atualiza uma matéria existente.
 
 ```json
 {
-  "name": "",
+  "name": "string",
   "courseid": 0
 }
 ```
@@ -321,7 +380,7 @@ Cria uma nova turma.
 
 ```json
 {
-  "name": "",
+  "name": "string",
   "teacherid": 0,
   "courseid": 0
 }
@@ -357,7 +416,7 @@ Atualiza uma turma existente.
 
 ```json
 {
-  "name": ""
+  "name": "string"
 }
 ```
 
@@ -403,13 +462,16 @@ Cria um novo aluno.
 
 ```json
 {
-  "name": "",
-  "birthday": "",
+  "name": "string",
+  "birthday": "dd/mm/yyyy",
   "classroomid": 0,
-  "login": "",
-  "password": ""
+  "login": "string",
+  "password": "string"
 }
 ```
+
+> [!IMPORTANT]
+> O campo *password* deve respeitar as mesmas regras do cadastro de usuário
 
 ##### Respostas
 
@@ -441,8 +503,8 @@ Atualiza um aluno existente.
 
 ```json
 {
-  "name": "",
-  "birthday": ""
+  "name": "string",
+  "birthday": "dd/mm/yyyy"
 }
 ```
 
@@ -504,7 +566,7 @@ Cria uma nova nota.
 ```json
 {
   "value": 0.00,
-  "date": "",
+  "date": "string",
   "studentid": 0,
   "teacherid": 0,
   "subjectid": 0
@@ -542,7 +604,7 @@ Atualiza uma nota existente.
 ```json
 {
   "value": 0.00,
-  "date": ""
+  "date": "dd/mm/yyyy"
 }
 ```
 
@@ -569,3 +631,8 @@ Exclui uma nota pelo ID.
 
 - JAVA
 - Spring Boot
+
+## Trello
+
+O Acompanhamento de cards do projeto pode ser realizado pelo link do
+Trello: [Quadro Kanban](https://trello.com/b/IpfttuB1/projeto-avaliativo)

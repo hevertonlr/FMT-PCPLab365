@@ -30,12 +30,12 @@ public class Grade extends GenericEntity<Grade> {
     private LocalDate date;
 
     @ManyToOne
-    @JsonIgnoreProperties({"grades", "user", "classroom"})
+    @JsonIgnoreProperties({"grades", "user", "classroom", "id"})
     @JoinColumn(name = "id_aluno", nullable = false)
     private Student student;
 
     @ManyToOne
-    @JsonIgnoreProperties({"grades", "user"})
+    @JsonIgnoreProperties({"grades", "user", "entryDate", "id"})
     @JoinColumn(name = "id_professor")
     private Teacher teacher;
 

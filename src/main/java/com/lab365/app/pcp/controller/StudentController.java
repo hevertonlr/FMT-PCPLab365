@@ -96,7 +96,7 @@ public class StudentController extends GenericController<Student> {
         if (validation != null)
             return validation;
 
-        StudentTotalScoreResponse response = new StudentTotalScoreResponse(gradeService.getScore(id));
+        Object response = StudentTotalScoreResponse.fromMap(gradeService.getScore(id));
         log.debug("GET /alunos/{}/pontuacao -> Response Body:\n{}\n", id, toJSON(response));
         return ResponseEntity.ok(response);
     }

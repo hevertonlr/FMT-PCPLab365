@@ -14,11 +14,12 @@ import java.util.List;
 public class Classroom extends GenericEntity<Classroom> {
     private String name;
 
-    @JsonIgnoreProperties("classroom")
-    @OneToMany(mappedBy = "classroom", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"classroom", "user"})
+    @OneToMany(mappedBy = "classroom", fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     private List<Student> students;
 
     @ManyToOne
+    @JsonIgnoreProperties({"user"})
     @JoinColumn(name = "id_professor", nullable = false)
     private Teacher teacher;
 

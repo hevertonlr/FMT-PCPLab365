@@ -18,13 +18,13 @@ public class Course extends GenericEntity<Course> {
     private String name;
 
     @ToString.Exclude
-    @JsonIgnoreProperties("course")
-    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"course", "students", "teacher"})
+    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Classroom> classrooms;
 
     @ToString.Exclude
     @JsonIgnoreProperties({"course", "user"})
-    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Subject> subjects;
 
     @Override
