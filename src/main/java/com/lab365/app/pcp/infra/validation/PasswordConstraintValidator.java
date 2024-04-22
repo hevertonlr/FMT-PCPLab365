@@ -1,5 +1,6 @@
 package com.lab365.app.pcp.infra.validation;
 
+import com.lab365.app.pcp.infra.validation.annotation.ValidPassword;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.passay.*;

@@ -3,6 +3,7 @@ package com.lab365.app.pcp.infra.exception;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,6 +30,11 @@ public class RestExceptionHandler {
         return Error.getError(HttpStatus.NOT_FOUND, ex);
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<?> handler(UnauthorizedException ex) {
+        return Error.getError(HttpStatus.UNAUTHORIZED, ex);
+    }
+
     @ExceptionHandler(InvalidException.class)
     public ResponseEntity<?> handler(InvalidException ex) {
         return Error.getError(HttpStatus.BAD_REQUEST, ex);
@@ -38,4 +44,10 @@ public class RestExceptionHandler {
     public ResponseEntity<?> handler(ConflictException ex) {
         return Error.getError(HttpStatus.CONFLICT, ex);
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handler(AccessDeniedException ex) {
+        return Error.getError(HttpStatus.UNAUTHORIZED, ex);
+    }
+
 }
