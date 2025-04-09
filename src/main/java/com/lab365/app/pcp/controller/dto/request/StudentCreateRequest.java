@@ -27,7 +27,7 @@ public record StudentCreateRequest(
 ) {
     public Student toEntity() {
         Role role = new Role();
-        role.setName(RolesEnum.ALUNO.toString());
+        role.setName(RolesEnum.STUDENT.toString());
         User user = new User();
         user.setUsername(login);
         user.setPassword(password);

@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record ClassroomCreateRequest(@NotBlank String name,
                                      @NotNull Long teacherid,
-                                     @NotNull Long courseid) {
+                                     @NotNull Long courseid) implements IGenericRequestDTO<Classroom> {
     public Classroom toEntity() {
         Classroom entity = new Classroom();
         entity.setName(name);

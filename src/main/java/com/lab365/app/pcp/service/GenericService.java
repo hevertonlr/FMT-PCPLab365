@@ -1,23 +1,27 @@
 package com.lab365.app.pcp.service;
 
+import jakarta.persistence.Entity;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import java.lang.reflect.ParameterizedType;
+import java.util.List;
+
 import com.lab365.app.pcp.datasource.entity.GenericEntity;
 import com.lab365.app.pcp.datasource.repository.IGenericRepository;
 import com.lab365.app.pcp.infra.exception.InvalidException;
 import com.lab365.app.pcp.infra.exception.NotFoundException;
-import jakarta.persistence.Entity;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-
-import java.lang.reflect.ParameterizedType;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.lab365.app.pcp.infra.utils.Util.toJSON;
 import static java.text.MessageFormat.format;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public abstract class GenericService<T extends GenericEntity<T>> implements IGenericService<T> {
     protected final IGenericRepository<T> repository;
@@ -25,6 +29,7 @@ public abstract class GenericService<T extends GenericEntity<T>> implements IGen
             .getActualTypeArguments()[0]).getAnnotation(Entity.class).name();
 
     @Override
+    @Transactional(readOnly = true)
     public List<T> findAll() {
         List<T> entities = repository.findAll();
         if (entities.isEmpty())
@@ -35,6 +40,7 @@ public abstract class GenericService<T extends GenericEntity<T>> implements IGen
     }
 
     @Override
+    @Transactional(readOnly = true)
     public T findById(Long id) throws NotFoundException {
         T entity = repository.findById(id).orElseThrow(
                 () -> {
@@ -51,7 +57,8 @@ public abstract class GenericService<T extends GenericEntity<T>> implements IGen
         try {
             boolean isCreation = source.getId() == null;
             T entity = isCreation ? source : findById(source.getId());
-            if (!isCreation) entity.update(source);
+            if (!isCreation)
+                entity.update(source);
 
             T finalEntity = repository.save(entity);
 

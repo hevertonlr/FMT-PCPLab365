@@ -10,11 +10,11 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 
 @Data
-@Entity(name = "Papel")
+@Entity()
 @DynamicUpdate
-@Table(name = "papel", indexes = @Index(columnList = "nome"))
+@Table(indexes = @Index(columnList = "name"))
 public class Role extends GenericEntity<Role> implements GrantedAuthority {
-    @Column(name = "nome", nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @Override

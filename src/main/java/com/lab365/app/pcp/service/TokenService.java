@@ -28,7 +28,7 @@ public class TokenService {
     private static final long EXPIRATION_TIME = 36000L;
 
     public LoginResponse getToken(LoginRequest request) {
-        User user = userRepository.findByUsername(request.username())
+        User user = userRepository.findByUsernameOrEmail(request.user(),request.user())
                 .orElseThrow(() -> new InvalidException("Usuário NÃO ENCONTRADO!"));
 
         validatePassword(user, request.password());

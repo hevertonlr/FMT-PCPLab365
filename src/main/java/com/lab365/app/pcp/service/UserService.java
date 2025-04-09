@@ -1,10 +1,12 @@
 package com.lab365.app.pcp.service;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.lab365.app.pcp.datasource.entity.User;
 import com.lab365.app.pcp.datasource.repository.RoleRepository;
 import com.lab365.app.pcp.datasource.repository.UserRepository;
 import com.lab365.app.pcp.infra.exception.InvalidException;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +19,8 @@ public class UserService extends GenericService<User> {
     private final RoleRepository roleRepository;
 
     public UserService(UserRepository repository,
-                       BCryptPasswordEncoder bCryptPasswordEncoder,
-                       RoleRepository roleRepository) {
+            BCryptPasswordEncoder bCryptPasswordEncoder,
+            RoleRepository roleRepository) {
         super(repository);
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleRepository = roleRepository;
@@ -31,12 +33,11 @@ public class UserService extends GenericService<User> {
                 .findByUsername(entity.getUsername())
                 .ifPresentOrElse((user) -> {
                     log.warn("Salvando: Usuário já existe ({})", user.getUsername());
-                    throw new InvalidException("Usuário já existe");
                 }, () -> {
                     String rolename = entity.getRole().getName().toUpperCase();
                     roleRepository.findByName(rolename).ifPresentOrElse(role -> {
                         entity.setRole(role);
-                        //entity.setPassword(bCryptPasswordEncoder.encode(entity.getPassword()));
+                        // entity.setPassword(bCryptPasswordEncoder.encode(entity.getPassword()));
                         super.save(entity);
                         log.debug("Salvando: Registro criado -> \n{}\n", toJSON(entity));
                     }, () -> {

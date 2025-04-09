@@ -1,44 +1,63 @@
 package com.lab365.app.pcp.datasource.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
+
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lab365.app.pcp.datasource.enums.CivilStateEnum;
+
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Data
-@Entity(name = "Docente")
+@Entity()
 @DynamicUpdate
-@Table(name = "docente")
-public class Teacher extends GenericEntity<Teacher> {
+@Table()
+public class Teacher extends Person<Teacher> {
 
-    @Column(name = "nome", nullable = false)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column()
+    private CivilStateEnum civilState;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @Column(name = "data_entrada")
-    private LocalDate entryDate;
+    @Column()
+    private String nationality;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "id_usuario", nullable = false, unique = true)
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    // @JsonIgnoreProperties({"teachers", "classrooms", "course", "subjects"})
+    @JoinTable(name = "teacher_subjects", joinColumns = @JoinColumn(name = "id_teacher"), inverseJoinColumns = @JoinColumn(name = "id_subject"))
+    private Set<Subject> subjects;
+
+    @JsonIgnore
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user", nullable = false, unique = true)
     private User user;
+
+    @JsonIgnore
+    // @JsonIgnoreProperties({"teachers", "students", "course", "subjects"})
+    @ManyToMany(mappedBy = "teachers", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    private Set<Classroom> classrooms;
 
     @Override
     public void update(Teacher source) {
-        if (!source.getName().isBlank()) this.setName(source.getName());
-        if (source.getEntryDate() != null) this.setEntryDate(source.getEntryDate());
+        super.update(source);
+        if (source.getCivilState() != null)
+            this.setCivilState(source.getCivilState());
+        if (!source.getNationality().isBlank())
+            this.setNationality(source.getNationality());
+        if (source.getSubjects() != null)
+            this.setSubjects(source.getSubjects());
+        // if (source.getAddress() != null) this.setAddress(source.getAddress());
     }
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
-    private List<Classroom> classrooms;
 }

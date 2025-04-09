@@ -1,34 +1,44 @@
 package com.lab365.app.pcp.datasource.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.ToString;
+
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.List;
-
 @Data
-@Entity(name = "Curso")
+@Entity()
 @DynamicUpdate
-@Table(name = "curso")
+@Table()
 public class Course extends GenericEntity<Course> {
 
-    @Column(name = "nome", nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @ToString.Exclude
-    @JsonIgnoreProperties({"course", "students", "teacher"})
-    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private List<Classroom> classrooms;
+    @JsonIgnore
+    // @JsonIgnoreProperties({"course", "students", "teacher"})
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private Set<Classroom> classrooms;
 
     @ToString.Exclude
-    @JsonIgnoreProperties({"course", "user"})
-    @OneToMany(mappedBy = "course", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private List<Subject> subjects;
+    @JsonIgnore
+    // @JsonIgnoreProperties({"course", "user"})
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private Set<Subject> subjects;
 
     @Override
     public void update(Course source) {
-        if (!source.getName().isBlank()) this.setName(source.getName());
+        if (!source.getName().isBlank())
+            this.setName(source.getName());
     }
 }

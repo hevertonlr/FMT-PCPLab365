@@ -15,33 +15,33 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-@Entity(name = "Nota")
+@Entity()
 @DynamicUpdate
-@Table(name = "notas")
+@Table()
 public class Grade extends GenericEntity<Grade> {
     @ColumnDefault(value = "0.00")
-    @Column(name = "valor", precision = 5, scale = 2)
+    @Column( precision = 5, scale = 2)
     private BigDecimal value;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonDeserialize(using = LocalDateDeserializer.class)
-    @Column(name = "data")
+    @Column()
     private LocalDate date;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"grades", "user", "classroom", "id"})
-    @JoinColumn(name = "id_aluno", nullable = false)
+    @JoinColumn(name = "id_student", nullable = false)
     private Student student;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"grades", "user", "entryDate", "id"})
-    @JoinColumn(name = "id_professor")
+    @JoinColumn(name = "id_teacher")
     private Teacher teacher;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"grades", "course"})
-    @JoinColumn(name = "id_materia", nullable = false)
+    @JoinColumn(name = "id_subject", nullable = false)
     private Subject subject;
 
     @Override

@@ -1,4 +1,6 @@
-package com.lab365.app.pcp.infra.auditing;
+package com.lab365.app.pcp.infra.config;
+
+import com.lab365.app.pcp.infra.auditing.AuditorAwareImpl;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class JPAConfig {
     @Bean
-    public AuditorAware<Long> auditorAware() {
+    AuditorAware<Long> auditorAware() {
         return new AuditorAwareImpl();
     }
 }

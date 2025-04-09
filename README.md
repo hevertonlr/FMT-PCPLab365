@@ -90,7 +90,7 @@ ___
 #### `POST /cadastro`
 
 Cadastra um novo usuário.\
-> **Observação**: Este usuário terá perfil ADM
+> **Observação**: Este usuário terá perfil ADMINISTRATOR
 
 ##### Corpo da Requisição
 

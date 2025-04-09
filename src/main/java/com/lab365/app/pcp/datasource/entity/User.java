@@ -7,20 +7,29 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Data
-@Entity(name = "Usuário")
+@Entity(name = "\"user\"")
 @DynamicUpdate
-@Table(name = "usuario")
+@Table(name = "\"user\"")
 public class User extends GenericEntity<User> {
 
-    @Column(name = "nome_usuario", nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String username;
 
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(columnDefinition = "TEXT")
+    private String image;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(name = "senha", nullable = false)
+    @Column(nullable = false)
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "id_papel", nullable = false)
+    @ManyToOne()
+    @JoinColumn(name = "id_role", nullable = false)
     private Role role;
 
     public void setPassword(String password) {
