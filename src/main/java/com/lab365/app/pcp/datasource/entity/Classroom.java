@@ -11,7 +11,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-import java.util.Set;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -28,13 +28,13 @@ public class Classroom extends GenericEntity<Classroom> {
     @JsonIgnore
     @JsonIgnoreProperties({ "classroom", "user" })
     @OneToMany(mappedBy = "classroom", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-    private Set<Student> students;
+    private List<Student> students;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JsonIgnore
     // @JsonIgnoreProperties({"classrooms", "user", "teachers"})
     @JoinTable(name = "teacher_classroom", joinColumns = @JoinColumn(name = "id_classroom"), inverseJoinColumns = @JoinColumn(name = "id_teacher"))
-    private Set<Teacher> teachers;
+    private List<Teacher> teachers;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
@@ -46,7 +46,7 @@ public class Classroom extends GenericEntity<Classroom> {
     @JsonIgnore
     // @JsonIgnoreProperties({"course", "classrooms", "subjects"})
     @JoinTable(name = "subject_classroom", joinColumns = @JoinColumn(name = "id_classroom"), inverseJoinColumns = @JoinColumn(name = "id_subject"))
-    private Set<Subject> subjects;
+    private List<Subject> subjects;
 
     @Override
     public void update(Classroom source) {

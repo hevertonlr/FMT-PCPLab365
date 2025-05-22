@@ -1,11 +1,11 @@
 package com.lab365.app.pcp.infra.config;
 
-import com.lab365.app.pcp.controller.dto.response.ClassroomResponse;
-import com.lab365.app.pcp.controller.dto.response.CourseResponse;
-import com.lab365.app.pcp.controller.dto.response.GradeResponse;
-import com.lab365.app.pcp.controller.dto.response.StudentResponse;
-import com.lab365.app.pcp.controller.dto.response.SubjectResponse;
-import com.lab365.app.pcp.controller.dto.response.TeacherResponse;
+import com.lab365.app.pcp.controller.dto.response.ClassroomResponseDTO;
+import com.lab365.app.pcp.controller.dto.response.CourseResponseDTO;
+import com.lab365.app.pcp.controller.dto.response.GradeResponseDTO;
+import com.lab365.app.pcp.controller.dto.response.StudentResponseDTO;
+import com.lab365.app.pcp.controller.dto.response.SubjectResponseDTO;
+import com.lab365.app.pcp.controller.dto.response.TeacherResponseDTO;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,32 +14,32 @@ import org.springframework.context.annotation.Configuration;
 public class ResponseDTOConfig {
 
     @Bean
-    ClassroomResponse classroomResponse() {
-        return new ClassroomResponse(null, null, null);
+    ClassroomResponseDTO classroomResponse() {
+        return new ClassroomResponseDTO();
     }
 
     @Bean
-    CourseResponse courseResponse() {
-        return new CourseResponse(null, null);
+    CourseResponseDTO courseResponse() {
+        return new CourseResponseDTO();
     }
 
     @Bean
-    SubjectResponse subjectResponse() {
-        return new SubjectResponse(null, null, null);
+    SubjectResponseDTO subjectResponse() {
+        return new SubjectResponseDTO();
     }
 
     @Bean
-    GradeResponse gradeResponse() {
-        return new GradeResponse(null, null, null, null, null, null);
+    GradeResponseDTO gradeResponse() {
+        return new GradeResponseDTO();
     }
 
     @Bean
-    StudentResponse studentResponse() {
-        return new StudentResponse(null, null, null, null, null, null, null, null, null, null);
+    StudentResponseDTO studentResponse() {
+        return new StudentResponseDTO();
     }
 
     @Bean
-    TeacherResponse teacherResponse() {
-        return new TeacherResponse(null, null, null, null, null, null, null, null, null, null, null);
+    TeacherResponseDTO teacherResponse() {
+        return new TeacherResponseDTO();
     }
 }

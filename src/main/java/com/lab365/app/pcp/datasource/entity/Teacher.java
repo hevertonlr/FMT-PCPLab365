@@ -9,9 +9,13 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.Set;
 
@@ -23,6 +27,12 @@ import org.hibernate.annotations.DynamicUpdate;
 @Data
 @Entity()
 @DynamicUpdate
+@NamedEntityGraphs({
+        @NamedEntityGraph(name = "Teacher.withAddressAndUser", attributeNodes = {
+                @NamedAttributeNode("address"),
+                @NamedAttributeNode("user")
+        })
+})
 @Table()
 public class Teacher extends Person<Teacher> {
 
@@ -33,19 +43,19 @@ public class Teacher extends Person<Teacher> {
     @Column()
     private String nationality;
 
+    @ToString.Exclude
     @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
-    // @JsonIgnoreProperties({"teachers", "classrooms", "course", "subjects"})
     @JoinTable(name = "teacher_subjects", joinColumns = @JoinColumn(name = "id_teacher"), inverseJoinColumns = @JoinColumn(name = "id_subject"))
     private Set<Subject> subjects;
 
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_user", nullable = false, unique = true)
     private User user;
 
+    @ToString.Exclude
     @JsonIgnore
-    // @JsonIgnoreProperties({"teachers", "students", "course", "subjects"})
     @ManyToMany(mappedBy = "teachers", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private Set<Classroom> classrooms;
 
@@ -58,6 +68,7 @@ public class Teacher extends Person<Teacher> {
             this.setNationality(source.getNationality());
         if (source.getSubjects() != null)
             this.setSubjects(source.getSubjects());
-        // if (source.getAddress() != null) this.setAddress(source.getAddress());
+        if (source.getUser() != null)
+            this.setUser(source.getUser());
     }
 }

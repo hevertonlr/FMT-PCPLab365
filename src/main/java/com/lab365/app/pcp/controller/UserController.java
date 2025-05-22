@@ -6,12 +6,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import com.lab365.app.pcp.controller.dto.request.RegisterRequest;
-import com.lab365.app.pcp.controller.dto.response.SuccessResponse;
-import com.lab365.app.pcp.controller.dto.response.UserResponse;
+import com.lab365.app.pcp.controller.dto.request.RegisterRequestDTO;
+import com.lab365.app.pcp.controller.dto.response.SuccessResponseDTO;
+import com.lab365.app.pcp.controller.dto.response.UserResponseDTO;
 import com.lab365.app.pcp.datasource.entity.User;
-import com.lab365.app.pcp.service.UserService;
+import com.lab365.app.pcp.infra.mapper.UserMapper;
+import com.lab365.app.pcp.service.interfaces.IUserService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,26 +31,29 @@ import static com.lab365.app.pcp.infra.utils.Util.toJSON;
 @RequiredArgsConstructor
 @RequestMapping(value = "usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
-    private final UserService service;
+    private final IUserService service;
+    private final UserMapper modelMapper;
 
     @Operation(summary = "Cadastrar", description = "Cadastrar um usuário")
     @PostMapping("cadastro")
-    public ResponseEntity<SuccessResponse> register(@Valid @RequestBody RegisterRequest request) {
-        log.info("POST /usuarios/cadastro -> username: {}", request.username());
-        User user = request.toEntity();
+    public ResponseEntity<SuccessResponseDTO> register(@Valid @RequestBody RegisterRequestDTO request) {
+        log.info("POST /usuarios/cadastro -> username: {}", request.getUsername());
+        User user = modelMapper.map(request, User.class);
         service.save(user);
         log.info("POST /usuarios/cadastro -> Cadastrado");
         log.debug("POST /usuarios/cadastro -> Response Body:\n{}\n", toJSON(user));
-        return SuccessResponse.toResponseEntity("Usuário Criado com Sucesso!");
+        SuccessResponseDTO response = new SuccessResponseDTO();
+        response.setMessage("Usuário Criado com Sucesso!");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "Buscar", description = "Busca um usuário específica pelo ID")
     @GetMapping("{id}")
-    public ResponseEntity<UserResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id) {
         log.info("GET /usuarios/{} -> Início", id);
         User entity = service.findById(id);
         log.info("GET /usuarios/{} -> Encontrado(a)", id);
-        UserResponse response = UserResponse.fromEntity(entity);
+        UserResponseDTO response = modelMapper.map(entity, UserResponseDTO.class);
         log.debug("GET /usuarios/{} -> Response Body:\n{}\n", id, toJSON(response));
         return ResponseEntity.ok(response);
     }

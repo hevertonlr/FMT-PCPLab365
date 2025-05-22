@@ -5,13 +5,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
-import com.lab365.app.pcp.controller.dto.request.TeacherCreateRequest;
-import com.lab365.app.pcp.controller.dto.request.TeacherUpdateRequest;
-import com.lab365.app.pcp.controller.dto.response.TeacherResponse;
+import java.util.List;
+
+import com.lab365.app.pcp.controller.dto.request.TeacherRequestDTO;
+import com.lab365.app.pcp.controller.dto.request.TeacherUpdateDTO;
+import com.lab365.app.pcp.controller.dto.response.TeacherResponseDTO;
 import com.lab365.app.pcp.datasource.entity.Teacher;
-import com.lab365.app.pcp.service.AddressService;
-import com.lab365.app.pcp.service.TeacherService;
-import com.lab365.app.pcp.service.UserService;
+import com.lab365.app.pcp.infra.mapper.TeacherMapper;
+import com.lab365.app.pcp.service.interfaces.IAddressService;
+import com.lab365.app.pcp.service.interfaces.ITeacherService;
+import com.lab365.app.pcp.service.interfaces.IUserService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,78 +34,71 @@ import static com.lab365.app.pcp.infra.utils.Util.toJSON;
 @Slf4j
 @RestController
 @RequestMapping(value = "docentes", produces = MediaType.APPLICATION_JSON_VALUE)
-public class TeacherController extends GenericController<Teacher, TeacherResponse> {
+public class TeacherController extends GenericController<Teacher, TeacherResponseDTO> {
 
-    private final UserService userService;
-    private final TeacherResponse teacherResponse;
-    private final AddressService addressService;
-    private final TeacherService service;
+    private final IUserService userService;
+    private final IAddressService addressService;
+    private final ITeacherService service;
 
-    public TeacherController(TeacherService service, UserService userService, AddressService addressService,
-            TeacherResponse teacherResponse) {
-        super(service, teacherResponse);
+    public TeacherController(ITeacherService service, IUserService userService, IAddressService addressService,
+            TeacherResponseDTO teacherResponse, TeacherMapper modelMapper) {
+        super(service, teacherResponse, modelMapper);
         this.userService = userService;
         this.addressService = addressService;
-        this.teacherResponse = teacherResponse;
         this.service = service;
     }
 
     @Operation(summary = "Criar", description = "Cria um novo docente")
     @PostMapping
-    public ResponseEntity<TeacherResponse> create(@Valid @RequestBody TeacherCreateRequest request) {
+    public ResponseEntity<TeacherResponseDTO> create(@Valid @RequestBody TeacherRequestDTO request) {
         log.info("POST /docentes");
-        Teacher entity = request.toEntity();
+        Teacher entity = this.mapTo(request, Teacher.class);
         userService.save(entity.getUser());
         addressService.save(entity.getAddress());
         Teacher savedEntity = super.service.save(entity);
         log.info("POST /docentes -> Cadastrado");
-        TeacherResponse response = teacherResponse.fromEntity(savedEntity);
+        TeacherResponseDTO response = this.mapTo(savedEntity, TeacherResponseDTO.class);
         log.debug("POST /docentes -> Response Body:\n{}\n", toJSON(response));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "Atualizar", description = "Atualiza um docente")
     @PutMapping("{id}")
-    public ResponseEntity<TeacherResponse> update(@RequestBody TeacherUpdateRequest request, @PathVariable Long id) {
+    public ResponseEntity<TeacherResponseDTO> update(@RequestBody TeacherUpdateDTO request, @PathVariable Long id) {
         log.info("PUT /docentes/{} -> Início", id);
-        Teacher entity = request.toEntity();
+        Teacher entity = this.mapTo(request, Teacher.class);
         userService.save(entity.getUser());
         addressService.save(entity.getAddress());
         entity.setId(id);
         Teacher savedEntity = super.service.save(entity);
         log.info("PUT /docentes/{} -> Atualizado", id);
-        TeacherResponse response = teacherResponse.fromEntity(savedEntity);
+        TeacherResponseDTO response = this.mapTo(savedEntity, TeacherResponseDTO.class);
         log.debug("PUT /docentes/{} -> Response Body:\n{}\n", id, toJSON(response));
         return ResponseEntity.ok(response);
     }
 
-    /*
-     * @Operation(summary = "Listar", description = "Lista os docentes cadastrados")
-     * 
-     * @GetMapping()
-     * public ResponseEntity<List<TeacherResponse>> list(@RequestParam(required =
-     * false) @Relations({"address", "user"}) Set<String> relations) {
-     * log.info("GET /docentes -> Início");
-     * List<Teacher> findedEntities = service.findAllWithRelations(relations);
-     * log.info("GET /docentes -> Encontrado(s) {} Docente(s)",
-     * findedEntities.size());
-     * List<TeacherResponse> entities =
-     * findedEntities.stream().map(teacherResponse::fromEntity).toList();
-     * log.debug("GET /docentes -> Response Body:\n{}\n", toJSON(entities));
-     * return ResponseEntity.ok(entities);
-     * }
-     */
+    @Operation(summary = "Listar", description = "Lista os docentes cadastrados")
+    @GetMapping()
+    public ResponseEntity<List<TeacherResponseDTO>> list() {
+        log.info("GET /docentes -> Início");
+        List<Teacher> findedEntities = service.findAll();
+        log.info("GET /docentes -> Encontrado(s) {} Docente(s)", findedEntities.size());
+        List<TeacherResponseDTO> entities = findedEntities.stream()
+                .map(entity -> (TeacherResponseDTO) this.mapTo(entity, TeacherResponseDTO.class)).toList();
+        log.debug("GET /docentes -> Response Body:\n{}\n", toJSON(entities));
+        return ResponseEntity.ok(entities);
+    }
 
-    // @Override
     @Operation(summary = "Buscar Detalhes", description = "Busca uma entidade específica pelo ID com todos os detalhes")
     @GetMapping("{id}/details")
-    public ResponseEntity<TeacherResponse> findDetailsById(@PathVariable Long id) {
+    public ResponseEntity<TeacherResponseDTO> findDetailsById(@PathVariable Long id) {
         String methodPath = getPathMethod();
         log.info("GET {} -> Início", methodPath);
         Teacher entity = service.findByIdWithAllDetails(id);
         log.info("GET {} -> Encontrado(a)", methodPath);
-        TeacherResponse response = teacherResponse.fromEntity(entity);
+        TeacherResponseDTO response = this.mapTo(entity, TeacherResponseDTO.class);
         log.debug("GET {} -> Response Body:\n{}\n", methodPath, response);
         return ResponseEntity.ok(response);
     }
+
 }

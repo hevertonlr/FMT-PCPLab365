@@ -7,12 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
-import com.lab365.app.pcp.controller.dto.request.SubjectRequest;
-import com.lab365.app.pcp.controller.dto.response.SubjectResponse;
+import com.lab365.app.pcp.controller.dto.request.SubjectRequestDTO;
+import com.lab365.app.pcp.controller.dto.response.SubjectResponseDTO;
 import com.lab365.app.pcp.datasource.entity.Course;
 import com.lab365.app.pcp.datasource.entity.Subject;
-import com.lab365.app.pcp.service.CourseService;
-import com.lab365.app.pcp.service.SubjectService;
+import com.lab365.app.pcp.infra.mapper.SubjectMapper;
+import com.lab365.app.pcp.service.interfaces.ICourseService;
+import com.lab365.app.pcp.service.interfaces.ISubjectService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,50 +32,51 @@ import static com.lab365.app.pcp.infra.utils.Util.toJSON;
 @Slf4j
 @RestController
 @RequestMapping(value = "materias", produces = MediaType.APPLICATION_JSON_VALUE)
-public class SubjectController extends GenericController<Subject, SubjectResponse> {
-    private final CourseService courseService;
-    private final SubjectResponse subjectResponse;
+public class SubjectController extends GenericController<Subject, SubjectResponseDTO> {
+    private final ICourseService courseService;
 
-    public SubjectController(SubjectService service, CourseService courseService, SubjectResponse subjectResponse) {
-        super(service, subjectResponse);
+    public SubjectController(ISubjectService service, ICourseService courseService, SubjectResponseDTO subjectResponse,
+            SubjectMapper modelMapper) {
+        super(service, subjectResponse, modelMapper);
         this.courseService = courseService;
-        this.subjectResponse = subjectResponse;
     }
 
     @Operation(summary = "Criar", description = "Cria uma nova matéria")
     @PostMapping
-    public ResponseEntity<SubjectResponse> create(@Valid @RequestBody SubjectRequest request) {
+    public ResponseEntity<SubjectResponseDTO> create(@Valid @RequestBody SubjectRequestDTO request) {
         log.info("POST /materias");
-        Subject entity = request.toEntity();
-        Course course = courseService.findById(request.courseid());
+        Subject entity = this.mapTo(request, Subject.class);
+        Course course = courseService.findById(request.getCourseid());
         entity.setCourse(course);
         Subject savedEntity = super.service.save(entity);
         log.info("POST /materias -> Cadastrada");
-        SubjectResponse response = subjectResponse.fromEntity(savedEntity);
+        SubjectResponseDTO response = this.mapTo(savedEntity, SubjectResponseDTO.class);
         log.debug("POST /materias -> Response Body:\n{}\n", toJSON(response));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(summary = "Atualizar", description = "Listar todas as turmas")
     @PutMapping("{id}")
-    public ResponseEntity<SubjectResponse> update(@Valid @RequestBody SubjectRequest request, @PathVariable Long id) {
+    public ResponseEntity<SubjectResponseDTO> update(@Valid @RequestBody SubjectRequestDTO request,
+            @PathVariable Long id) {
         log.info("PUT /materias/{}", id);
-        Subject entity = request.toEntity();
+        Subject entity = this.mapTo(request, Subject.class);
         entity.setId(id);
         log.info("PUT /materias/{} -> Atualizada", id);
         Subject savedEntity = super.service.save(entity);
-        SubjectResponse response = subjectResponse.fromEntity(savedEntity);
+        SubjectResponseDTO response = this.mapTo(savedEntity, SubjectResponseDTO.class);
         log.debug("PUT /materias/{} -> Response Body:\n{}\n", id, toJSON(response));
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Listar", description = "Listar todas as materias")
     @GetMapping()
-    public ResponseEntity<List<SubjectResponse>> list() {
+    public ResponseEntity<List<SubjectResponseDTO>> list() {
         log.info("GET /turmas -> Início");
         List<Subject> entities = super.service.findAll();
         log.info("GET /turmas -> Encontrada(s) {} Turmas", entities.size());
-        List<SubjectResponse> response = entities.stream().map(subjectResponse::fromEntity).toList();
+        List<SubjectResponseDTO> response = entities.stream()
+                .map(entity -> (SubjectResponseDTO) this.mapTo(entity, SubjectResponseDTO.class)).toList();
         log.debug("GET /turmas -> Response Body:\n{}\n", toJSON(response));
         return ResponseEntity.ok(response);
     }

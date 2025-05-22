@@ -1,22 +1,22 @@
 package com.lab365.app.pcp.controller.dto.request;
 
-import com.lab365.app.pcp.datasource.entity.User;
-import com.lab365.app.pcp.infra.validation.annotation.ValidPassword;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
-public record UserCreateRequest(@NotBlank String username,
-                                @NotBlank String name,
-                                @NotBlank String email,
-                                String image,
-                                @ValidPassword String password) {
+import com.lab365.app.pcp.infra.validation.annotation.ValidPassword;
 
-    public User toEntity() {
-        User user = new User();
-        user.setUsername(username);
-        user.setName(name);
-        user.setEmail(email);
-        user.setImage(image);
-        user.setPassword(password);
-        return user;
-    }
+@Data
+public class UserCreateRequest {
+        @NotBlank(message = "Username is required")
+        private String username;
+        @NotBlank(message = "Name is required")
+        private String name;
+        @NotBlank(message = "Email is required")
+        @Email(message = "Email should be valid")
+        private String email;
+        private String image;
+        @NotBlank(message = "Password is required")
+        @ValidPassword
+        private String password;
 }

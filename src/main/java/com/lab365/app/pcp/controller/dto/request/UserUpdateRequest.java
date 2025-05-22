@@ -1,23 +1,15 @@
 package com.lab365.app.pcp.controller.dto.request;
 
-import com.lab365.app.pcp.datasource.entity.User;
+import lombok.Data;
+
 import com.lab365.app.pcp.infra.validation.annotation.ValidPassword;
 
-public record UserUpdateRequest(Long id,
-                                String username,
-                                String name,
-                                String email,
-                                String image,
-                                @ValidPassword String password) {
-
-    public User toEntity() {
-        User user = new User();
-        user.setId(id);
-        user.setUsername(username);
-        user.setName(name);
-        user.setEmail(email);
-        user.setImage(image);
-        user.setPassword(password);
-        return user;
-    }
+@Data
+public class UserUpdateRequest {
+        private String name;
+        private String email;
+        private String image;
+        @ValidPassword
+        private String password;
+        private Long roleId;
 }
