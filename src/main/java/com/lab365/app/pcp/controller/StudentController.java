@@ -46,7 +46,6 @@ public class StudentController extends GenericController<Student, StudentRespons
     private final IUserService userService;
     private final IClassroomService classroomService;
     private final IGradeService gradeService;
-    private final IStudentService service;
 
     public StudentController(IStudentService service,
             IUserService userService,
@@ -59,8 +58,6 @@ public class StudentController extends GenericController<Student, StudentRespons
         this.userService = userService;
         this.classroomService = classroomService;
         this.gradeService = gradeService;
-
-        this.service = service;
     }
 
     @Operation(summary = "Criar", description = "Cria um novo aluno")

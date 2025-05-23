@@ -57,27 +57,6 @@ public abstract class GenericController<T extends IGenericEntity<T>, R> implemen
         return ResponseEntity.noContent().build();
     }
 
-    // private Type getResponseDTOType() {
-    // return ((ParameterizedType)
-    // getClass().getGenericSuperclass()).getActualTypeArguments()[1];
-    // }
-
-    // protected TypeToken<R> getResponseTypeToken() {
-    // return new TypeToken<R>() {
-    // };
-    // }
-
-    // protected R mapToDto(T source, TypeToken<R> destinationType) {
-    // try {
-    // return mapper.map(source, destinationType.getType());
-    // } catch (Exception e) {
-    // throw new IllegalArgumentException(
-    // "Failed to map from " + source.getClass().getSimpleName() +
-    // " to " + destinationType.getType().getTypeName(),
-    // e);
-    // }
-    // }
-
     protected <R> R mapTo(Object source, Class<R> targetClass) {
         return mapper.map(source, targetClass);
     }
@@ -90,7 +69,6 @@ public abstract class GenericController<T extends IGenericEntity<T>, R> implemen
     @Operation(summary = "Listar Paginado", description = "Lista itens de forma paginada")
     @GetMapping("paged")
     public Page<R> listPaged(@Valid PageableParams params) {
-
         return service.findAll(
                 buildSpec(params.getFilters()),
                 buildPageable(params)).map(mapper::toDto);
